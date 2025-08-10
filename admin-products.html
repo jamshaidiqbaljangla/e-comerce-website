@@ -1286,7 +1286,7 @@
                         
                         localStorage.setItem('adminAuthToken', data.token);
                         this.hideLoginModal();
-                        this.loadProducts();
+                        await this.loadProducts();
                         this.showAlert('Welcome back! Login successful.', 'success');
                     } else {
                         throw new Error(data.error || 'Login failed');
