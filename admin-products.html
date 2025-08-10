@@ -867,9 +867,8 @@
                         <i class="fas fa-external-link-alt"></i>
                         View Store
                     </a>
-                    <button class="btn btn-outline" id="logout-btn">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Logout
+                    <button id="logout-btn" class="btn btn-sm btn-danger" style="display: none;">
+                        <i class="fas fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
             </div>
@@ -1151,12 +1150,15 @@
                 const token = localStorage.getItem('adminAuthToken');
                 if (!token) {
                     this.showLoginModal();
+                    document.getElementById('logout-btn').style.display = 'none';
                 } else {
+                    document.getElementById('logout-btn').style.display = 'block';
                     // Validate token by trying to load products
                     this.loadProducts().catch(() => {
                         // If loading fails, token is likely invalid
                         localStorage.removeItem('adminAuthToken');
                         this.showLoginModal();
+                        document.getElementById('logout-btn').style.display = 'none';
                     });
                 }
             }
@@ -1304,6 +1306,7 @@
             logout() {
                 localStorage.removeItem('adminAuthToken');
                 this.showAlert('You have been logged out.', 'success');
+                document.getElementById('logout-btn').style.display = 'none';
                 setTimeout(() => {
                     this.showLoginModal();
                 }, 1500);
