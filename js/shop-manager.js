@@ -6,10 +6,23 @@
 window.ShopManager = {
     // Configuration options
     config: {
-        productsPerPage: 9,
-        defaultSorting: 'default'
+        productsPerPage: 12,
+        priceStep: 50,
+        defaultImageUrl: '/images/placeholder.jpg'
     },
-    
+
+    // DOM element selectors
+    selectors: {
+        productsContainer: '.products-grid',
+        filterButtons: '.filter-button',
+        sortSelect: '.sort-select',
+        priceRange: '.price-range',
+        paginationContainer: '.pagination',
+        searchInput: '.search-input',
+        productCards: '.product-card',
+        loadingSpinner: '.loading-spinner'
+    },
+
     // State variables
     state: {
         currentPage: 1,
@@ -32,18 +45,8 @@ window.ShopManager = {
     
     /**
      * Initialize the shop manager
-    // Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', async function() {
-        if (window.ShopManager) {
-            await window.ShopManager.init();
-        }
-    });
-} else {
-    if (window.ShopManager) {
-        window.ShopManager.init();
-    }
-}: async function() {
+     */
+    init: async function() {
         console.log('[DEBUG] shop-manager.js: Shop Manager initializing...');
         
         // Check if we're on the shop page
@@ -56,63 +59,32 @@ if (document.readyState === 'loading') {
         this.setupCategories();
         this.setupPriceRange();
         this.bindEvents();
-        this.applyFiltersAndSort();
         
         console.log('[DEBUG] shop-manager.js: Shop Manager initialized.');
     },
     
     /**
-     * Set up products from PRODUCTS data - Updated to use API
+     * Set up products from PRODUCTS data
      */
     setupProducts: async function() {
-        console.log('[DEBUG] shop-manager.js: Setting up products from API...');
+        console.log('[DEBUG] shop-manager.js: Loading products from API...');
         
         try {
-            // Load products from API using the PRODUCTS manager
-            if (typeof window.PRODUCTS !== 'undefined' && typeof window.PRODUCTS.loadProducts === 'function') {
-                const products = await window.PRODUCTS.loadProducts({ limit: 100 });
-                
-                // Convert API data to shop format
-                this.state.filteredProducts = products.map(product => ({
-                    id: product.id,
-                    name: product.name,
-                    price: parseFloat(product.price) || 0,
-                    image: product.image_url || product.images?.primary || 'images/placeholder.jpg',
-                    hoverImage: product.images?.gallery?.[0] || product.image_url,
-                    category: product.category_id,
-                    description: product.description,
-                    trending: product.is_featured || false,
-                    bestseller: product.is_featured || false,
-                    newArrival: false,
-                    stock: product.quantity || 0,
-                    inStock: (product.quantity || 0) > 0 && product.is_active,
-                    oldPrice: product.compare_price ? parseFloat(product.compare_price) : null,
-                    slug: product.slug
-                }));
-                
-                // Find maximum price for price range filter
-                this.state.maxPrice = Math.max(...this.state.filteredProducts.map(product => product.price || 0));
-                this.state.filters.priceRange.max = Math.ceil(this.state.maxPrice);
-                
-                console.log('[DEBUG] shop-manager.js: Products loaded from API:', this.state.filteredProducts.length);
-                return;
-            }
-        } catch (error) {
-            console.error('[ERROR] shop-manager.js: Failed to load products from API:', error);
-        }
-        
-        // Fallback: Use PRODUCTS.items if available
-        if (typeof window.PRODUCTS !== 'undefined' && Array.isArray(window.PRODUCTS.items)) {
-            this.state.filteredProducts = [...window.PRODUCTS.items];
+            // Load products using the PRODUCTS API
+            const products = await window.PRODUCTS.loadProducts();
+            this.state.filteredProducts = [...products];
             
             // Find maximum price for price range filter
-            this.state.maxPrice = Math.max(...window.PRODUCTS.items.map(product => product.price || 0));
+            this.state.maxPrice = Math.max(...products.map(product => parseFloat(product.price) || 0));
             this.state.filters.priceRange.max = Math.ceil(this.state.maxPrice);
             
             console.log('[DEBUG] shop-manager.js: Products loaded:', this.state.filteredProducts.length);
-        } else {
-            console.warn('[DEBUG] shop-manager.js: PRODUCTS data not available, creating sample products.');
-            // Create sample products
+            
+            // Apply filters and sort after products are loaded
+            this.applyFiltersAndSort();
+        } catch (error) {
+            console.error('[DEBUG] shop-manager.js: Error loading products:', error);
+            // Create sample products as fallback
             this.createSampleProducts();
         }
     },
@@ -152,9 +124,11 @@ if (document.readyState === 'loading') {
                 inStock: inStock,
                 newArrival: isNew,
                 images: {
-                    primary: `images/product-${Math.min(i, 9)}.jpg`,
-                    hover: `images/product-${Math.min(i, 9)}-hover.jpg`
-                }
+                    main: this.config.defaultImageUrl,
+                    gallery: [this.config.defaultImageUrl]
+                },
+                description: `Premium quality ${name.toLowerCase()} crafted with attention to detail.`,
+                stock: inStock ? Math.floor(Math.random() * 20) + 1 : 0
             });
         }
         
@@ -162,570 +136,317 @@ if (document.readyState === 'loading') {
         this.state.maxPrice = Math.max(...sampleProducts.map(product => product.price));
         this.state.filters.priceRange.max = Math.ceil(this.state.maxPrice);
         
-        console.log('[DEBUG] shop-manager.js: Sample products created:', sampleProducts.length);
+        console.log('[DEBUG] shop-manager.js: Sample products created:', this.state.filteredProducts.length);
     },
-    
+
     /**
      * Set up categories from products
      */
     setupCategories: function() {
-        // Extract unique categories from products
-        const categories = {};
+        this.state.categories = {};
         
         this.state.filteredProducts.forEach(product => {
-            if (product.categories && Array.isArray(product.categories)) {
+            if (product.categories) {
                 product.categories.forEach(category => {
-                    if (!categories[category]) {
-                        categories[category] = {
-                            id: category,
-                            name: this.formatCategoryName(category),
-                            count: 1
-                        };
-                    } else {
-                        categories[category].count++;
+                    if (!this.state.categories[category]) {
+                        this.state.categories[category] = 0;
                     }
+                    this.state.categories[category]++;
                 });
             }
         });
         
-        this.state.categories = categories;
-        this.renderCategoryFilters();
-        
-        console.log('[DEBUG] shop-manager.js: Categories set up:', Object.keys(categories).length);
+        console.log('[DEBUG] shop-manager.js: Categories set up:', this.state.categories);
     },
-    
+
     /**
-     * Format category name (convert slug to title case)
-     */
-    formatCategoryName: function(category) {
-        // If PRODUCTS.categories exists and has this category, use its name
-        if (window.PRODUCTS && window.PRODUCTS.categories && window.PRODUCTS.categories[category]) {
-            return window.PRODUCTS.categories[category].name;
-        }
-        
-        // Otherwise format the slug
-        return category
-            .split('-')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
-    },
-    
-    /**
-     * Set up price range inputs
+     * Set up price range slider
      */
     setupPriceRange: function() {
-        const minPriceInput = document.getElementById('min-price');
-        const maxPriceInput = document.getElementById('max-price');
-        
-        if (minPriceInput && maxPriceInput) {
-            minPriceInput.value = this.state.filters.priceRange.min;
-            maxPriceInput.value = this.state.filters.priceRange.max;
-            
-            // Set max attribute
-            maxPriceInput.setAttribute('max', Math.ceil(this.state.maxPrice * 1.2));
+        const priceRange = document.querySelector(this.selectors.priceRange);
+        if (priceRange) {
+            priceRange.max = this.state.maxPrice;
+            priceRange.value = this.state.maxPrice;
+            this.state.filters.priceRange.max = this.state.maxPrice;
         }
     },
-    
+
     /**
-     * Bind all shop-related events
+     * Bind event listeners
      */
     bindEvents: function() {
-        // Filter toggle for mobile
-        const filterToggleBtn = document.querySelector('.filter-toggle-btn');
-        if (filterToggleBtn) {
-            filterToggleBtn.addEventListener('click', () => {
-                const sidebar = document.querySelector('.shop-sidebar');
-                if (sidebar) {
-                    // If sidebar doesn't have close button, add it
-                    if (!sidebar.querySelector('.sidebar-close')) {
-                        const closeBtn = document.createElement('button');
-                        closeBtn.className = 'sidebar-close';
-                        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
-                        closeBtn.addEventListener('click', () => {
-                            sidebar.classList.remove('active');
-                        });
-                        sidebar.appendChild(closeBtn);
-                    }
-                    
-                    sidebar.classList.add('active');
-                }
+        // Filter buttons
+        document.querySelectorAll(this.selectors.filterButtons).forEach(button => {
+            button.addEventListener('click', (e) => {
+                this.handleFilterClick(e);
+            });
+        });
+
+        // Sort select
+        const sortSelect = document.querySelector(this.selectors.sortSelect);
+        if (sortSelect) {
+            sortSelect.addEventListener('change', (e) => {
+                this.state.sorting = e.target.value;
+                this.applyFiltersAndSort();
             });
         }
-        
-        // Price range filter
-        document.getElementById('apply-price-filter').addEventListener('click', () => {
-            const minPrice = parseFloat(document.getElementById('min-price').value) || 0;
-            const maxPrice = parseFloat(document.getElementById('max-price').value) || this.state.maxPrice;
-            
-            this.state.filters.priceRange.min = minPrice;
-            this.state.filters.priceRange.max = maxPrice;
-            
-            this.state.currentPage = 1;
-            this.applyFiltersAndSort();
-        });
-        
-        // Product status filters
-        document.getElementById('in-stock').addEventListener('change', (e) => {
-            this.state.filters.inStock = e.target.checked;
-            this.state.currentPage = 1;
-            this.applyFiltersAndSort();
-        });
-        
-        document.getElementById('on-sale').addEventListener('change', (e) => {
-            this.state.filters.onSale = e.target.checked;
-            this.state.currentPage = 1;
-            this.applyFiltersAndSort();
-        });
-        
-        document.getElementById('new-arrival').addEventListener('change', (e) => {
-            this.state.filters.newArrival = e.target.checked;
-            this.state.currentPage = 1;
-            this.applyFiltersAndSort();
-        });
-        
-        // Reset filters
-        document.getElementById('reset-filters').addEventListener('click', () => {
-            this.resetFilters();
-        });
-        
-        // Sorting
-        document.getElementById('shop-sort').addEventListener('change', (e) => {
-            this.state.sorting = e.target.value;
-            this.state.currentPage = 1;
-            this.applyFiltersAndSort();
-        });
+
+        // Price range
+        const priceRange = document.querySelector(this.selectors.priceRange);
+        if (priceRange) {
+            priceRange.addEventListener('input', (e) => {
+                this.state.filters.priceRange.max = parseFloat(e.target.value);
+                this.applyFiltersAndSort();
+            });
+        }
+
+        // Search input
+        const searchInput = document.querySelector(this.selectors.searchInput);
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                this.state.searchTerm = e.target.value.toLowerCase();
+                this.applyFiltersAndSort();
+            });
+        }
     },
-    
+
     /**
-     * Render category filters in sidebar
-     * FIXED: prevents duplicate categories and improves checkbox handling
+     * Handle filter button clicks
      */
-    renderCategoryFilters: function() {
-        const categoriesContainer = document.getElementById('category-filters');
-        if (!categoriesContainer) return;
-        
-        // Keep the "All Categories" checkbox only
-        categoriesContainer.innerHTML = `
-            <div class="filter-option">
-                <input type="checkbox" id="category-all" ${this.state.filters.categories.length === 0 ? 'checked' : ''}>
-                <label for="category-all">All Categories</label>
-            </div>
-        `;
-        
-        // Create a set of unique category IDs to prevent duplicates
-        const uniqueCategories = new Set(Object.keys(this.state.categories));
-        
-        // Add category checkboxes
-        uniqueCategories.forEach(categoryId => {
-            const category = this.state.categories[categoryId];
-            categoriesContainer.innerHTML += `
-                <div class="filter-option">
-                    <input type="checkbox" id="category-${categoryId}" 
-                           ${this.state.filters.categories.includes(categoryId) ? 'checked' : ''}>
-                    <label for="category-${categoryId}">${category.name} (${category.count || 0})</label>
-                </div>
-            `;
-        });
-        
-        // Add event listeners to newly created checkboxes
-        const allCategoriesCheckbox = document.getElementById('category-all');
-        if (allCategoriesCheckbox) {
-            allCategoriesCheckbox.addEventListener('change', (e) => {
-                if (e.target.checked) {
-                    // Uncheck all other categories
-                    document.querySelectorAll('#category-filters input[type="checkbox"]:not(#category-all)').forEach(cb => {
-                        cb.checked = false;
-                    });
-                    
-                    // Clear category filters
-                    this.state.filters.categories = [];
-                    this.state.currentPage = 1;
-                    this.applyFiltersAndSort();
-                }
+    handleFilterClick: function(e) {
+        const button = e.target;
+        const filterType = button.dataset.filter;
+        const filterValue = button.dataset.value;
+
+        if (filterType === 'category') {
+            // Toggle category filter
+            const index = this.state.filters.categories.indexOf(filterValue);
+            if (index > -1) {
+                this.state.filters.categories.splice(index, 1);
+                button.classList.remove('active');
+            } else {
+                this.state.filters.categories.push(filterValue);
+                button.classList.add('active');
+            }
+        } else if (filterType === 'availability') {
+            // Toggle availability filters
+            this.state.filters[filterValue] = !this.state.filters[filterValue];
+            button.classList.toggle('active');
+        }
+
+        this.applyFiltersAndSort();
+    },
+
+    /**
+     * Apply filters and sorting
+     */
+    applyFiltersAndSort: function() {
+        let filtered = [...this.state.filteredProducts];
+
+        // Apply category filters
+        if (this.state.filters.categories.length > 0) {
+            filtered = filtered.filter(product => {
+                return product.categories && product.categories.some(cat => 
+                    this.state.filters.categories.includes(cat)
+                );
             });
         }
+
+        // Apply price range filter
+        filtered = filtered.filter(product => {
+            const price = parseFloat(product.price);
+            return price >= this.state.filters.priceRange.min && 
+                   price <= this.state.filters.priceRange.max;
+        });
+
+        // Apply availability filters
+        if (this.state.filters.inStock) {
+            filtered = filtered.filter(product => product.inStock !== false && product.stock > 0);
+        }
+
+        if (this.state.filters.onSale) {
+            filtered = filtered.filter(product => product.oldPrice || product.onSale);
+        }
+
+        if (this.state.filters.newArrival) {
+            filtered = filtered.filter(product => product.newArrival);
+        }
+
+        // Apply search filter
+        if (this.state.searchTerm) {
+            filtered = filtered.filter(product => 
+                product.name.toLowerCase().includes(this.state.searchTerm) ||
+                (product.description && product.description.toLowerCase().includes(this.state.searchTerm))
+            );
+        }
+
+        // Apply sorting
+        this.sortProducts(filtered);
+
+        // Update pagination
+        this.updatePagination(filtered);
+
+        // Render products
+        this.renderProducts(filtered);
+    },
+
+    /**
+     * Sort products based on current sorting option
+     */
+    sortProducts: function(products) {
+        switch (this.state.sorting) {
+            case 'price-low':
+                products.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+                break;
+            case 'price-high':
+                products.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+                break;
+            case 'name':
+                products.sort((a, b) => a.name.localeCompare(b.name));
+                break;
+            case 'newest':
+                products.sort((a, b) => {
+                    if (a.newArrival && !b.newArrival) return -1;
+                    if (!a.newArrival && b.newArrival) return 1;
+                    return 0;
+                });
+                break;
+            default:
+                // Default sorting - keep original order
+                break;
+        }
+    },
+
+    /**
+     * Update pagination
+     */
+    updatePagination: function(products) {
+        this.state.totalPages = Math.ceil(products.length / this.config.productsPerPage);
+        if (this.state.currentPage > this.state.totalPages) {
+            this.state.currentPage = 1;
+        }
+        this.renderPagination();
+    },
+
+    /**
+     * Render pagination controls
+     */
+    renderPagination: function() {
+        const container = document.querySelector(this.selectors.paginationContainer);
+        if (!container) return;
+
+        let html = '';
         
-        // Add event listeners to category checkboxes
-        document.querySelectorAll('#category-filters input[type="checkbox"]:not(#category-all)').forEach(checkbox => {
-            checkbox.addEventListener('change', (e) => {
-                const categoryId = e.target.id.replace('category-', '');
-                const allCategoriesCheckbox = document.getElementById('category-all');
-                
-                if (e.target.checked) {
-                    // Add category to filters
-                    if (!this.state.filters.categories.includes(categoryId)) {
-                        this.state.filters.categories.push(categoryId);
-                    }
-                    
-                    // Uncheck "All Categories"
-                    if (allCategoriesCheckbox) {
-                        allCategoriesCheckbox.checked = false;
-                    }
-                } else {
-                    // Remove category from filters
-                    this.state.filters.categories = this.state.filters.categories.filter(cat => cat !== categoryId);
-                    
-                    // If no categories selected, check "All Categories"
-                    if (this.state.filters.categories.length === 0 && allCategoriesCheckbox) {
-                        allCategoriesCheckbox.checked = true;
-                    }
-                }
-                
-                this.state.currentPage = 1;
+        // Previous button
+        if (this.state.currentPage > 1) {
+            html += `<button class="pagination-btn" data-page="${this.state.currentPage - 1}">Previous</button>`;
+        }
+
+        // Page numbers
+        for (let i = 1; i <= this.state.totalPages; i++) {
+            const active = i === this.state.currentPage ? 'active' : '';
+            html += `<button class="pagination-btn ${active}" data-page="${i}">${i}</button>`;
+        }
+
+        // Next button
+        if (this.state.currentPage < this.state.totalPages) {
+            html += `<button class="pagination-btn" data-page="${this.state.currentPage + 1}">Next</button>`;
+        }
+
+        container.innerHTML = html;
+
+        // Bind pagination events
+        container.querySelectorAll('.pagination-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                this.state.currentPage = parseInt(e.target.dataset.page);
                 this.applyFiltersAndSort();
             });
         });
     },
-    
+
     /**
-     * Reset all filters to default
+     * Render products in the grid
      */
-    resetFilters: function() {
-        // Reset state
-        this.state.filters = {
-            categories: [],
-            priceRange: {
-                min: 0,
-                max: Math.ceil(this.state.maxPrice)
-            },
-            inStock: true,
-            onSale: false,
-            newArrival: false
-        };
-        
-        this.state.sorting = this.config.defaultSorting;
-        this.state.currentPage = 1;
-        
-        // Reset UI
-        document.querySelectorAll('#category-filters input[type="checkbox"]').forEach(cb => {
-            cb.checked = cb.id === 'category-all';
-        });
-        
-        document.getElementById('min-price').value = 0;
-        document.getElementById('max-price').value = Math.ceil(this.state.maxPrice);
-        
-        document.getElementById('in-stock').checked = true;
-        document.getElementById('on-sale').checked = false;
-        document.getElementById('new-arrival').checked = false;
-        
-        document.getElementById('shop-sort').value = this.config.defaultSorting;
-        
-        this.applyFiltersAndSort();
-    },
-    
-    /**
-     * Apply all filters and sorting, then update display
-     */
-    applyFiltersAndSort: function() {
-        console.log('[DEBUG] shop-manager.js: Applying filters and sorting...');
-        
-        // Start with all products from the filtered products (now loaded from API)
-        let products = [...this.state.filteredProducts];
-        
-        // Apply category filter
-        if (this.state.filters.categories.length > 0) {
-            products = products.filter(product => {
-                return product.categories && Array.isArray(product.categories) && 
-                       product.categories.some(category => this.state.filters.categories.includes(category));
-            });
-        }
-        
-        // Apply price range filter
-        products = products.filter(product => {
-            return product.price >= this.state.filters.priceRange.min && 
-                   product.price <= this.state.filters.priceRange.max;
-        });
-        
-        // Apply in-stock filter
-        if (this.state.filters.inStock) {
-            products = products.filter(product => product.inStock !== false);
-        }
-        
-        // Apply on-sale filter
-        if (this.state.filters.onSale) {
-            products = products.filter(product => product.oldPrice);
-        }
-        
-        // Apply new-arrival filter
-        if (this.state.filters.newArrival) {
-            products = products.filter(product => product.newArrival);
-        }
-        
-        // Apply sorting
-        products = this.sortProducts(products, this.state.sorting);
-        
-        // Update filtered products
-        this.state.filteredProducts = products;
-        
-        // Calculate total pages
-        this.state.totalPages = Math.max(1, Math.ceil(products.length / this.config.productsPerPage));
-        
-        // Ensure current page is valid
-        if (this.state.currentPage > this.state.totalPages) {
-            this.state.currentPage = 1;
-        }
-        
-        // Update display
-        this.updateProductsDisplay();
-        this.updatePagination();
-        this.updateResultsCount();
-        
-        console.log('[DEBUG] shop-manager.js: Filters applied, filtered products:', products.length);
-    },
-    
-    /**
-     * Sort products based on selected sorting option
-     */
-    sortProducts: function(products, sortOption) {
-        switch (sortOption) {
-            case 'price-low':
-                return products.sort((a, b) => (a.price || 0) - (b.price || 0));
-                
-            case 'price-high':
-                return products.sort((a, b) => (b.price || 0) - (a.price || 0));
-                
-            case 'name-asc':
-                return products.sort((a, b) => a.name.localeCompare(b.name));
-                
-            case 'name-desc':
-                return products.sort((a, b) => b.name.localeCompare(a.name));
-                
-            case 'newest':
-                return products.sort((a, b) => a.newArrival ? -1 : (b.newArrival ? 1 : 0));
-                
-            default:
-                // Default sorting (featured or original order)
-                return products;
-        }
-    },
-    
-    /**
-     * Update products display with current page of filtered products
-     */
-    updateProductsDisplay: function() {
-        const productsContainer = document.getElementById('products-grid');
-        if (!productsContainer) return;
-        
-        // Calculate start and end indices for current page
-        const startIndex = (this.state.currentPage - 1) * this.config.productsPerPage;
-        const endIndex = startIndex + this.config.productsPerPage;
-        
-        // Get products for current page
-        const productsToShow = this.state.filteredProducts.slice(startIndex, endIndex);
-        
-        // Clear container
-        productsContainer.innerHTML = '';
-        
-        // If no products, show message
-        if (productsToShow.length === 0) {
-            productsContainer.innerHTML = `
-                <div class="no-products-found">
-                    <i class="fas fa-search"></i>
-                    <p>No products match your criteria.</p>
-                    <button id="clear-filters" class="btn btn-dark">Clear Filters</button>
-                </div>
-            `;
-            
-            // Add event listener to clear filters button
-            const clearFiltersBtn = document.getElementById('clear-filters');
-            if (clearFiltersBtn) {
-                clearFiltersBtn.addEventListener('click', () => this.resetFilters());
-            }
-            
+    renderProducts: function(products) {
+        const container = document.querySelector(this.selectors.productsContainer);
+        if (!container) {
+            console.error('[DEBUG] shop-manager.js: Products container not found');
             return;
         }
+
+        // Calculate pagination
+        const startIndex = (this.state.currentPage - 1) * this.config.productsPerPage;
+        const endIndex = startIndex + this.config.productsPerPage;
+        const paginatedProducts = products.slice(startIndex, endIndex);
+
+        let html = '';
         
-        // Render products
-        productsToShow.forEach(product => {
-            // Use ProductRenderer if available, otherwise create simple product card
-            if (window.ProductRenderer && typeof window.ProductRenderer.createProductCard === 'function') {
-                productsContainer.innerHTML += window.ProductRenderer.createProductCard(product);
-            } else {
-                productsContainer.innerHTML += this.createSimpleProductCard(product);
-            }
+        paginatedProducts.forEach(product => {
+            html += this.createProductCard(product);
         });
+
+        container.innerHTML = html;
         
-        // Initialize wishlist buttons if WishlistManager is available
-        if (window.WishlistManager && typeof window.WishlistManager.updateWishlistDisplay === 'function') {
-            window.WishlistManager.updateWishlistDisplay();
-        }
+        console.log(`[DEBUG] shop-manager.js: Rendered ${paginatedProducts.length} products`);
     },
-    
+
     /**
-     * Create a simple product card (fallback if ProductRenderer is not available)
+     * Create HTML for a product card
      */
-    createSimpleProductCard: function(product) {
-        const isOnSale = product.oldPrice && product.oldPrice > product.price;
-        const isNew = product.newArrival;
-        const isSoldOut = product.inStock === false;
-        
-        const badges = [];
-        if (isNew) badges.push('<span class="badge new">New</span>');
-        if (isOnSale) badges.push(`<span class="badge sale">-${Math.round((1 - product.price / product.oldPrice) * 100)}%</span>`);
-        if (isSoldOut) badges.push('<span class="badge sold-out">Sold Out</span>');
-        
-        const badgesHtml = badges.length > 0 ? `<div class="product-badges">${badges.join('')}</div>` : '';
-        
-        const priceHtml = isOnSale 
-            ? `<span class="old-price">$${product.oldPrice.toFixed(2)}</span> <span class="current-price">$${product.price.toFixed(2)}</span>` 
-            : `<span class="current-price">$${product.price.toFixed(2)}</span>`;
+    createProductCard: function(product) {
+        const imageUrl = product.images?.main || product.image_url || this.config.defaultImageUrl;
+        const salePrice = product.oldPrice ? product.price : null;
+        const originalPrice = product.oldPrice || product.price;
         
         return `
-            <div class="product-card" data-product-id="${product.id}">
+            <div class="product-card" data-id="${product.id}">
                 <div class="product-image">
-                    ${badgesHtml}
-                    <a href="product.html?id=${product.id}">
-                        <img src="${product.images.primary}" alt="${product.name}" class="primary-image">
-                        <img src="${product.images.hover || product.images.primary}" alt="${product.name} Hover" class="hover-image">
-                    </a>
-                    <div class="product-actions">
-                        <button class="action-btn quick-view-btn" aria-label="Quick view"><i class="fas fa-eye"></i></button>
-                        <button class="action-btn wishlist-btn" aria-label="Add to wishlist"><i class="far fa-heart"></i></button>
-                    </div>
-                    <div class="add-to-cart-wrapper">
-                        <button class="btn btn-dark add-to-cart-btn" ${isSoldOut ? 'disabled' : ''}>${isSoldOut ? 'Sold Out' : 'Add to Cart'}</button>
-                    </div>
+                    <img src="${imageUrl}" alt="${product.name}" loading="lazy" 
+                         onerror="this.src='${this.config.defaultImageUrl}'">
+                    ${product.newArrival ? '<span class="badge new">New</span>' : ''}
+                    ${product.oldPrice ? '<span class="badge sale">Sale</span>' : ''}
+                    ${!product.inStock || product.stock === 0 ? '<span class="badge out-of-stock">Out of Stock</span>' : ''}
                 </div>
-                <div class="product-content">
-                    <div class="product-categories">
-                        <a href="category.html?id=${product.categories && product.categories[0] || 'all'}">${this.formatCategoryName(product.categories && product.categories[0] || 'general')}</a>
-                    </div>
-                    <h3 class="product-title"><a href="product.html?id=${product.id}">${product.name}</a></h3>
+                <div class="product-info">
+                    <h3 class="product-name">${product.name}</h3>
                     <div class="product-price">
-                        ${priceHtml}
+                        ${salePrice ? `<span class="sale-price">$${salePrice}</span>` : ''}
+                        <span class="price ${salePrice ? 'original-price' : ''}">$${originalPrice}</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary" onclick="window.location.href='product.html?id=${product.id}'">
+                            View Details
+                        </button>
+                        ${product.inStock && product.stock > 0 ? 
+                            `<button class="btn btn-secondary" onclick="addToCart('${product.id}')">Add to Cart</button>` :
+                            '<button class="btn btn-disabled" disabled>Out of Stock</button>'
+                        }
                     </div>
                 </div>
             </div>
         `;
     },
-    
+
     /**
-     * Update pagination based on current state
+     * Refresh products data
      */
-    updatePagination: function() {
-        const paginationContainer = document.getElementById('pagination');
-        if (!paginationContainer) return;
-        
-        if (this.state.totalPages <= 1) {
-            paginationContainer.innerHTML = '';
-            return;
-        }
-        
-        let paginationHtml = '';
-        
-        // Previous button
-        paginationHtml += `
-            <button class="pagination-btn prev ${this.state.currentPage === 1 ? 'disabled' : ''}" 
-                    ${this.state.currentPage === 1 ? 'disabled' : ''}>
-                <i class="fas fa-chevron-left"></i>
-            </button>
-        `;
-        
-        // Page numbers
-        const maxPagesToShow = 5;
-        const halfMaxPages = Math.floor(maxPagesToShow / 2);
-        let startPage = Math.max(1, this.state.currentPage - halfMaxPages);
-        let endPage = Math.min(this.state.totalPages, startPage + maxPagesToShow - 1);
-        
-        // Adjust start if end is maxed out
-        if (endPage === this.state.totalPages) {
-            startPage = Math.max(1, endPage - maxPagesToShow + 1);
-        }
-        
-        // First page (if not included in regular pages)
-        if (startPage > 1) {
-            paginationHtml += `<button class="pagination-btn" data-page="1">1</button>`;
-            if (startPage > 2) {
-                paginationHtml += `<span class="pagination-dots">...</span>`;
-            }
-        }
-        
-        // Regular page numbers
-        for (let i = startPage; i <= endPage; i++) {
-            paginationHtml += `
-                <button class="pagination-btn ${i === this.state.currentPage ? 'active' : ''}" 
-                        data-page="${i}">${i}</button>
-            `;
-        }
-        
-        // Last page (if not included in regular pages)
-        if (endPage < this.state.totalPages) {
-            if (endPage < this.state.totalPages - 1) {
-                paginationHtml += `<span class="pagination-dots">...</span>`;
-            }
-            paginationHtml += `<button class="pagination-btn" data-page="${this.state.totalPages}">${this.state.totalPages}</button>`;
-        }
-        
-        // Next button
-        paginationHtml += `
-            <button class="pagination-btn next ${this.state.currentPage === this.state.totalPages ? 'disabled' : ''}" 
-                    ${this.state.currentPage === this.state.totalPages ? 'disabled' : ''}>
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        `;
-        
-        paginationContainer.innerHTML = paginationHtml;
-        
-        // Add event listeners
-        paginationContainer.querySelectorAll('.pagination-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (btn.classList.contains('disabled')) return;
-                
-                if (btn.classList.contains('prev')) {
-                    this.state.currentPage = Math.max(1, this.state.currentPage - 1);
-                } else if (btn.classList.contains('next')) {
-                    this.state.currentPage = Math.min(this.state.totalPages, this.state.currentPage + 1);
-                } else {
-                    const page = parseInt(btn.getAttribute('data-page'), 10);
-                    if (!isNaN(page)) {
-                        this.state.currentPage = page;
-                    }
-                }
-                
-                this.updateProductsDisplay();
-                this.updatePagination();
-                this.updateResultsCount();
-                
-                // Scroll to top of products grid
-                document.querySelector('.shop-products').scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-    },
-    
-    /**
-     * Update results count display
-     */
-    updateResultsCount: function() {
-        const showingCount = document.getElementById('showing-count');
-        const totalCount = document.getElementById('total-count');
-        
-        if (showingCount && totalCount) {
-            const totalProducts = this.state.filteredProducts.length;
-            const startIndex = (this.state.currentPage - 1) * this.config.productsPerPage + 1;
-            const endIndex = Math.min(startIndex + this.config.productsPerPage - 1, totalProducts);
-            
-            if (totalProducts === 0) {
-                showingCount.textContent = '0';
-            } else {
-                showingCount.textContent = `${startIndex}-${endIndex}`;
-            }
-            
-            totalCount.textContent = totalProducts;
-        }
+    refreshProducts: async function() {
+        console.log('[DEBUG] shop-manager.js: Refreshing products...');
+        await this.setupProducts();
     }
 };
 
-// Initialize ShopManager when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-        if (window.ShopManager) {
-            window.ShopManager.init();
-        }
-    });
-} else {
-    if (window.ShopManager) {
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.PRODUCTS) {
         window.ShopManager.init();
+    } else {
+        // Wait for PRODUCTS to load
+        const checkProducts = setInterval(() => {
+            if (window.PRODUCTS) {
+                clearInterval(checkProducts);
+                window.ShopManager.init();
+            }
+        }, 100);
     }
-}
-
-console.log('[DEBUG] shop-manager.js: ShopManager object defined');
+});
