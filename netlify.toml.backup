@@ -8,6 +8,10 @@
 [functions]
   directory = "functions"
   node_bundler = "esbuild"
+
+# Temporarily disable Neon plugin due to network issues
+# [[plugins]]
+#   package = "netlify-plugin-neon"
   
 [[redirects]]
   from = "/api/*"
