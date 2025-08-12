@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | BINGO</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/authentication.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Section (simplified) -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <h1>BINGO</h1>
+                </a>
+            </div>
+            <nav>
+                <ul class="menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <!-- Keep minimal header actions -->
+                <div class="search-container">
+                    <button class="search-toggle" aria-label="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <a href="login.html" class="account-toggle active" aria-label="Account">
+                    <i class="fas fa-user"></i>
+                </a>
+                <div class="cart-container">
+                    <button class="cart-toggle" aria-label="Shopping Cart">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="container">
+            <h1>Login</h1>
+            <div class="breadcrumb">
+                <a href="index.html">Home</a> / <span>Login</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Login Form -->
+    <section class="auth-container">
+        <div class="auth-form-container">
+            <div class="auth-logo">
+                <h1>BINGO</h1>
+            </div>
+            <h2 class="auth-title">Welcome Back</h2>
+            <p class="auth-subtitle">Sign in to your account</p>
+            
+            <div class="auth-message error" id="login-error">
+                <i class="fas fa-exclamation-circle"></i> Invalid email or password. Please try again.
+            </div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+                
+                <div class="auth-actions">
+                    <label class="checkbox-container remember-me">
+                        <input type="checkbox" name="remember">
+                        <span class="checkmark"></span>
+                        <span>Remember Me</span>
+                    </label>
+                    
+                    <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
+                </div>
+                
+                <button type="submit" class="btn btn-dark btn-full">Sign In</button>
+            </form>
+            
+            <div class="auth-divider">or</div>
+            
+            <div class="social-login">
+                <a href="#" class="social-btn google">
+                    <i class="fab fa-google"></i> Google
+                </a>
+                <a href="#" class="social-btn facebook">
+                    <i class="fab fa-facebook-f"></i> Facebook
+                </a>
+            </div>
+            
+            <div class="auth-footer">
+                Don't have an account? <a href="register.html" class="auth-link">Create Account</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer (simplified) -->
+    <footer class="footer">
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="copyright">
+                    <p>&copy; 2025 BINGO. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script src="js/auth-manager.js"></script>
+    <script src="js/search-manager.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

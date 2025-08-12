@@ -867,8 +867,9 @@
                         <i class="fas fa-external-link-alt"></i>
                         View Store
                     </a>
-                    <button id="logout-btn" class="btn btn-sm btn-danger" style="display: none;">
-                        <i class="fas fa-sign-out-alt"></i> Logout
+                    <button class="btn btn-outline" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
                     </button>
                 </div>
             </div>
@@ -1127,11 +1128,12 @@
         </div>
     </div>
 
+    <script src="js/config.js"></script>
     <script>
         // Enhanced Admin Products Management System
         class AdminProducts {
             constructor() {
-                this.API_BASE = `${window.location.origin}`;
+                this.API_BASE = API_BASE;
                 this.products = [];
                 this.editingProduct = null;
                 this.uploadedFiles = [];
@@ -1147,7 +1149,7 @@
             }
             
             checkAuth() {
-                const token = localStorage.getItem('adminAuthToken');
+                const token = localStorage.getItem('adminToken');
                 if (!token) {
                     this.showLoginModal();
                     document.getElementById('logout-btn').style.display = 'none';
@@ -1156,7 +1158,7 @@
                     // Validate token by trying to load products
                     this.loadProducts().catch(() => {
                         // If loading fails, token is likely invalid
-                        localStorage.removeItem('adminAuthToken');
+                        localStorage.removeItem('adminToken');
                         this.showLoginModal();
                         document.getElementById('logout-btn').style.display = 'none';
                     });
@@ -1228,7 +1230,7 @@
             }
             
             async apiRequest(endpoint, options = {}) {
-                const token = localStorage.getItem('adminAuthToken');
+                const token = localStorage.getItem('adminToken');
                 
                 const config = {
                     headers: {
@@ -1242,7 +1244,7 @@
                     const response = await fetch(`${this.API_BASE}${endpoint}`, config);
                     
                     if (response.status === 401 || response.status === 403) {
-                        localStorage.removeItem('adminAuthToken');
+                        localStorage.removeItem('adminToken');
                         this.showLoginModal();
                         throw new Error('Authentication failed. Please log in again.');
                     }
@@ -1286,7 +1288,7 @@
                             throw new Error('Admin access required');
                         }
                         
-                        localStorage.setItem('adminAuthToken', data.token);
+                        localStorage.setItem('adminToken', data.token);
                         this.hideLoginModal();
                         await this.loadProducts();
                         this.showAlert('Welcome back! Login successful.', 'success');
@@ -1304,7 +1306,7 @@
             }
             
             logout() {
-                localStorage.removeItem('adminAuthToken');
+                localStorage.removeItem('adminToken');
                 this.showAlert('You have been logged out.', 'success');
                 document.getElementById('logout-btn').style.display = 'none';
                 setTimeout(() => {
@@ -1313,7 +1315,7 @@
             }
             
             isAuthenticated() {
-                return !!localStorage.getItem('adminAuthToken');
+                return !!localStorage.getItem('adminToken');
             }
             
             showLoginModal() {
@@ -1458,10 +1460,12 @@
             
             showProductModal(product = null) {
                 this.editingProduct = product;
-                this.uploadedFiles = [];
                 
                 const modal = document.getElementById('product-modal');
                 const title = document.getElementById('modal-title');
+                
+                // Always clear uploaded files first
+                this.uploadedFiles = [];
                 
                 if (product) {
                     title.textContent = 'Edit Product';
@@ -1480,6 +1484,9 @@
                 document.body.style.overflow = '';
                 this.editingProduct = null;
                 this.uploadedFiles = [];
+                
+                // Clear image preview completely
+                document.getElementById('image-preview').innerHTML = '';
             }
             
             populateForm(product) {
@@ -1490,6 +1497,37 @@
                 document.getElementById('product-quantity').value = product.quantity || 0;
                 document.getElementById('product-status').value = product.inStock ? 'true' : 'false';
                 document.getElementById('product-description').value = product.description || '';
+                
+                // Clear and reset image preview for editing
+                const preview = document.getElementById('image-preview');
+                preview.innerHTML = '';
+                this.uploadedFiles = [];
+                
+                // Show existing product image if available
+                if (product.image_url) {
+                    const img = document.createElement('img');
+                    img.src = product.image_url;
+                    img.style.maxWidth = '200px';
+                    img.style.maxHeight = '200px';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '8px';
+                    img.style.border = '1px solid #ddd';
+                    
+                    const imageContainer = document.createElement('div');
+                    imageContainer.style.position = 'relative';
+                    imageContainer.style.display = 'inline-block';
+                    imageContainer.style.marginRight = '10px';
+                    
+                    const label = document.createElement('p');
+                    label.textContent = 'Current Image:';
+                    label.style.fontSize = '12px';
+                    label.style.color = '#666';
+                    label.style.marginBottom = '5px';
+                    
+                    imageContainer.appendChild(label);
+                    imageContainer.appendChild(img);
+                    preview.appendChild(imageContainer);
+                }
                 
                 // Set categories
                 const categoriesSelect = document.getElementById('product-categories');
@@ -1599,6 +1637,13 @@
                     });
                     
                     this.showAlert(result.message || 'Product saved successfully!', 'success');
+                    
+                    // Notify cache manager of product changes
+                    if (window.CacheManager) {
+                        const action = this.editingProduct ? 'updated' : 'created';
+                        window.CacheManager.notifyChange('products', action, result.data);
+                    }
+                    
                     this.hideProductModal();
                     this.loadProducts();
                     
@@ -1963,12 +2008,60 @@
                 }, 5000);
             }
 
-            // ...existing code...
+            viewProduct(productId) {
+                const product = this.products.find(p => p.id == productId);
+                if (product) {
+                    this.showProductModal(product);
+                    // Make the modal read-only
+                    document.getElementById('product-form').querySelectorAll('input, select, textarea').forEach(el => el.disabled = true);
+                    document.getElementById('save-btn').style.display = 'none';
+                    document.getElementById('cancel-btn').textContent = 'Close';
+                } else {
+                    this.showAlert('Product not found.', 'error');
+                }
+            }
+
+            editProduct(productId) {
+                const product = this.products.find(p => p.id == productId);
+                if (product) {
+                    this.showProductModal(product);
+                    document.getElementById('product-form').querySelectorAll('input, select, textarea').forEach(el => el.disabled = false);
+                    document.getElementById('save-btn').style.display = 'block';
+                    document.getElementById('cancel-btn').textContent = 'Cancel';
+                } else {
+                    this.showAlert('Product not found.', 'error');
+                }
+            }
+
+            async deleteProduct(productId) {
+                if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+                    return;
+                }
+
+                try {
+                    const result = await this.apiRequest(`/api/admin/products/${productId}`, {
+                        method: 'DELETE'
+                    });
+                    this.showAlert(result.message || 'Product deleted successfully!', 'success');
+                    
+                    // Notify cache manager of product deletion
+                    if (window.CacheManager) {
+                        window.CacheManager.notifyChange('products', 'deleted', { id: productId });
+                    }
+                    
+                    this.loadProducts();
+                } catch (error) {
+                    console.error('Error deleting product:', error);
+                    this.showAlert('Failed to delete product: ' + error.message, 'error');
+                }
+            }
         }
         
         // Initialize the enhanced admin system
         const adminProducts = new AdminProducts();
     </script>
+    <script src="js/config.js"></script>
+    <script src="js/cache-manager.js"></script>
     <script src="js/admin-auth.js"></script>
 </body>
 </html>

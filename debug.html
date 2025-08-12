@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug | BINGO</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .debug-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        .warning { background-color: #fff3cd; border-color: #ffeaa7; color: #856404; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 3px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>BINGO Website Debug Page</h1>
+    
+    <div class="debug-section">
+        <h2>JavaScript Files Loading Test</h2>
+        <div id="js-test-results">Testing...</div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>API Endpoints Test</h2>
+        <div id="api-test-results">Testing...</div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>Product Data Test</h2>
+        <div id="product-test-results">Testing...</div>
+    </div>
+
+    <script>
+        // Test 1: Check if JavaScript files are accessible
+        async function testJSFiles() {
+            const jsFiles = [
+                'js/fallback-products.js',
+                'js/products-data.js', 
+                'js/product-renderer.js',
+                'js/main.js'
+            ];
+            
+            let results = '';
+            for (const file of jsFiles) {
+                try {
+                    const response = await fetch(file);
+                    if (response.ok) {
+                        results += `✅ ${file} - OK\n`;
+                    } else {
+                        results += `❌ ${file} - Error ${response.status}\n`;
+                    }
+                } catch (error) {
+                    results += `❌ ${file} - ${error.message}\n`;
+                }
+            }
+            
+            document.getElementById('js-test-results').innerHTML = `<pre>${results}</pre>`;
+        }
+        
+        // Test 2: Check API endpoints
+        async function testAPIEndpoints() {
+            const endpoints = [
+                'http://localhost:3001/api/products',
+                'http://localhost:3001/api/categories'
+            ];
+            
+            let results = '';
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(endpoint);
+                    if (response.ok) {
+                        const data = await response.json();
+                        results += `✅ ${endpoint} - OK (${data.length || Object.keys(data).length} items)\n`;
+                    } else {
+                        results += `❌ ${endpoint} - Error ${response.status}\n`;
+                    }
+                } catch (error) {
+                    results += `⚠️  ${endpoint} - ${error.message} (using fallback)\n`;
+                }
+            }
+            
+            document.getElementById('api-test-results').innerHTML = `<pre>${results}</pre>`;
+        }
+        
+        // Test 3: Check if global objects are defined after loading scripts
+        function testProductData() {
+            let results = '';
+            
+            // Check if window.PRODUCTS exists
+            if (typeof window.PRODUCTS !== 'undefined') {
+                results += '✅ window.PRODUCTS is defined\n';
+                
+                // Test fallback products
+                try {
+                    const fallbackProducts = window.PRODUCTS.getFallbackProducts();
+                    results += `✅ Fallback products available: ${fallbackProducts.length} items\n`;
+                    
+                    // Test specific methods
+                    const trending = fallbackProducts.filter(p => p.trending);
+                    const bestsellers = fallbackProducts.filter(p => p.bestseller);
+                    const newArrivals = fallbackProducts.filter(p => p.newArrival);
+                    
+                    results += `  📊 Trending: ${trending.length} products\n`;
+                    results += `  📊 Best Sellers: ${bestsellers.length} products\n`;
+                    results += `  📊 New Arrivals: ${newArrivals.length} products\n`;
+                    
+                } catch (error) {
+                    results += `❌ Error testing fallback products: ${error.message}\n`;
+                }
+            } else {
+                results += '❌ window.PRODUCTS is not defined\n';
+            }
+            
+            // Check if window.ProductRenderer exists
+            if (typeof window.ProductRenderer !== 'undefined') {
+                results += '✅ window.ProductRenderer is defined\n';
+                
+                if (typeof window.ProductRenderer.loadTabContent === 'function') {
+                    results += '✅ ProductRenderer.loadTabContent method exists\n';
+                } else {
+                    results += '❌ ProductRenderer.loadTabContent method missing\n';
+                }
+            } else {
+                results += '❌ window.ProductRenderer is not defined\n';
+            }
+            
+            document.getElementById('product-test-results').innerHTML = `<pre>${results}</pre>`;
+        }
+        
+        // Load the actual JavaScript files and test
+        async function loadAndTest() {
+            const scripts = [
+                'js/debug-config.js',
+                'js/fallback-products.js',
+                'js/products-data.js',
+                'js/product-renderer.js',
+                'js/main.js'
+            ];
+            
+            for (const script of scripts) {
+                try {
+                    await new Promise((resolve, reject) => {
+                        const scriptElement = document.createElement('script');
+                        scriptElement.src = script;
+                        scriptElement.onload = resolve;
+                        scriptElement.onerror = reject;
+                        document.head.appendChild(scriptElement);
+                    });
+                } catch (error) {
+                    console.error(`Failed to load ${script}:`, error);
+                }
+            }
+            
+            // Wait a bit for scripts to initialize
+            setTimeout(() => {
+                testProductData();
+            }, 1000);
+        }
+        
+        // Run tests
+        document.addEventListener('DOMContentLoaded', async function() {
+            await testJSFiles();
+            await testAPIEndpoints();
+            await loadAndTest();
+        });
+    </script>
+</body>
+</html>

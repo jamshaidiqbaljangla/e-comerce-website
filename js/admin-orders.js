@@ -1,0 +1,381 @@
+// Admin Orders Management JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize orders management
+    loadOrders();
+    setupEventListeners();
+});
+
+let currentOrders = [];
+
+function setupEventListeners() {
+    // Search functionality
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(handleSearch, 300));
+    }
+
+    // Status filter
+    const statusFilter = document.getElementById('status-filter');
+    if (statusFilter) {
+        statusFilter.addEventListener('change', loadOrders);
+    }
+
+    // Refresh button
+    const refreshBtn = document.getElementById('refresh-btn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', loadOrders);
+    }
+}
+
+async function loadOrders() {
+    const searchTerm = document.getElementById('search-input')?.value || '';
+    const statusFilter = document.getElementById('status-filter')?.value || '';
+    
+    try {
+        showLoading(true);
+        
+        const params = new URLSearchParams();
+        if (searchTerm) params.append('search', searchTerm);
+        if (statusFilter) params.append('status', statusFilter);
+        
+        const response = await fetch(`/api/admin/orders?${params}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            currentOrders = data.orders;
+            renderOrdersTable(data.orders);
+            updateOrdersStats(data.orders);
+        } else {
+            showError('Failed to load orders: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error loading orders:', error);
+        showError('Failed to load orders');
+    } finally {
+        showLoading(false);
+    }
+}
+
+function renderOrdersTable(orders) {
+    const tableBody = document.querySelector('#orders-table tbody');
+    if (!tableBody) return;
+
+    if (orders.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center">
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No orders found</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tableBody.innerHTML = orders.map(order => `
+        <tr data-order-id="${order.id}">
+            <td>
+                <input type="checkbox" class="order-checkbox" value="${order.id}">
+            </td>
+            <td>
+                <div class="order-info">
+                    <strong>#${order.order_number}</strong>
+                    <small>${formatDate(order.created_at)}</small>
+                </div>
+            </td>
+            <td>
+                <div class="customer-info">
+                    <strong>${order.first_name || ''} ${order.last_name || ''}</strong>
+                    <small>${order.email}</small>
+                </div>
+            </td>
+            <td>
+                <span class="badge badge-${getStatusClass(order.status)}">
+                    ${order.status.toUpperCase()}
+                </span>
+            </td>
+            <td>
+                <strong>$${parseFloat(order.total_amount).toFixed(2)}</strong>
+            </td>
+            <td>
+                <span class="item-count">${order.item_count} items</span>
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn view-btn" onclick="viewOrder(${order.id})" title="View Order">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="action-btn edit-btn" onclick="editOrderStatus(${order.id}, '${order.status}')" title="Edit Status">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn print-btn" onclick="printOrder(${order.id})" title="Print Order">
+                        <i class="fas fa-print"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+
+    // Setup select all checkbox
+    const selectAllCheckbox = document.getElementById('select-all');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.order-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+    }
+}
+
+function updateOrdersStats(orders) {
+    const totalOrders = orders.length;
+    const pendingOrders = orders.filter(order => order.status === 'pending').length;
+    const totalRevenue = orders.reduce((sum, order) => sum + parseFloat(order.total_amount), 0);
+    
+    // Update stats cards if they exist
+    const totalOrdersElement = document.getElementById('total-orders');
+    const pendingOrdersElement = document.getElementById('pending-orders');
+    const totalRevenueElement = document.getElementById('total-revenue');
+    
+    if (totalOrdersElement) totalOrdersElement.textContent = totalOrders;
+    if (pendingOrdersElement) pendingOrdersElement.textContent = pendingOrders;
+    if (totalRevenueElement) totalRevenueElement.textContent = `$${totalRevenue.toFixed(2)}`;
+}
+
+async function viewOrder(orderId) {
+    try {
+        const response = await fetch(`/api/admin/orders/${orderId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            showOrderModal(data.order);
+        } else {
+            showError('Failed to load order details');
+        }
+    } catch (error) {
+        console.error('Error loading order:', error);
+        showError('Failed to load order details');
+    }
+}
+
+function showOrderModal(order) {
+    const modal = document.getElementById('order-modal') || createOrderModal();
+    
+    // Populate modal with order data
+    modal.querySelector('#modal-order-number').textContent = order.order_number;
+    modal.querySelector('#modal-order-status').textContent = order.status.toUpperCase();
+    modal.querySelector('#modal-order-date').textContent = formatDate(order.created_at);
+    modal.querySelector('#modal-customer-name').textContent = `${order.first_name || ''} ${order.last_name || ''}`;
+    modal.querySelector('#modal-customer-email').textContent = order.email;
+    modal.querySelector('#modal-total-amount').textContent = `$${parseFloat(order.total_amount).toFixed(2)}`;
+    
+    // Populate order items
+    const itemsContainer = modal.querySelector('#modal-order-items');
+    itemsContainer.innerHTML = order.items.map(item => `
+        <div class="order-item">
+            <div class="item-image">
+                <img src="${item.image_url || '/images/placeholder.jpg'}" alt="${item.product_name}">
+            </div>
+            <div class="item-details">
+                <h5>${item.product_name}</h5>
+                <p>SKU: ${item.product_sku || 'N/A'}</p>
+                <p>Quantity: ${item.quantity}</p>
+                <p>Price: $${parseFloat(item.unit_price).toFixed(2)}</p>
+            </div>
+            <div class="item-total">
+                $${parseFloat(item.total_price).toFixed(2)}
+            </div>
+        </div>
+    `).join('');
+    
+    // Show shipping address
+    if (order.shipping_address) {
+        const address = JSON.parse(order.shipping_address);
+        modal.querySelector('#modal-shipping-address').innerHTML = `
+            ${address.first_name} ${address.last_name}<br>
+            ${address.address_line_1}<br>
+            ${address.address_line_2 ? address.address_line_2 + '<br>' : ''}
+            ${address.city}, ${address.state} ${address.postal_code}<br>
+            ${address.country}
+        `;
+    }
+    
+    modal.style.display = 'block';
+}
+
+function createOrderModal() {
+    const modalHTML = `
+        <div id="order-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Order Details</h2>
+                    <span class="close-btn">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="order-details-grid">
+                        <div class="order-info">
+                            <h3>Order Information</h3>
+                            <p><strong>Order Number:</strong> <span id="modal-order-number"></span></p>
+                            <p><strong>Status:</strong> <span id="modal-order-status"></span></p>
+                            <p><strong>Date:</strong> <span id="modal-order-date"></span></p>
+                            <p><strong>Total:</strong> <span id="modal-total-amount"></span></p>
+                        </div>
+                        <div class="customer-info">
+                            <h3>Customer Information</h3>
+                            <p><strong>Name:</strong> <span id="modal-customer-name"></span></p>
+                            <p><strong>Email:</strong> <span id="modal-customer-email"></span></p>
+                        </div>
+                        <div class="shipping-info">
+                            <h3>Shipping Address</h3>
+                            <div id="modal-shipping-address"></div>
+                        </div>
+                    </div>
+                    <div class="order-items">
+                        <h3>Order Items</h3>
+                        <div id="modal-order-items"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    const modal = document.getElementById('order-modal');
+    
+    // Close modal functionality
+    modal.querySelector('.close-btn').addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+    
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+    
+    return modal;
+}
+
+async function editOrderStatus(orderId, currentStatus) {
+    const statuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+    const statusOptions = statuses.map(status => 
+        `<option value="${status}" ${status === currentStatus ? 'selected' : ''}>${status.toUpperCase()}</option>`
+    ).join('');
+    
+    const result = await Swal.fire({
+        title: 'Update Order Status',
+        html: `
+            <select id="status-select" class="swal2-input">
+                ${statusOptions}
+            </select>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Update',
+        preConfirm: () => {
+            const status = document.getElementById('status-select').value;
+            return status;
+        }
+    });
+    
+    if (result.isConfirmed) {
+        try {
+            const response = await fetch(`/api/admin/orders/${orderId}/status`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ status: result.value })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showSuccess('Order status updated successfully');
+                loadOrders(); // Reload the orders table
+            } else {
+                showError('Failed to update order status: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error updating order status:', error);
+            showError('Failed to update order status');
+        }
+    }
+}
+
+function printOrder(orderId) {
+    // Open order in new window for printing
+    window.open(`/admin/orders/${orderId}/print`, '_blank');
+}
+
+function getStatusClass(status) {
+    const statusClasses = {
+        pending: 'warning',
+        processing: 'info',
+        shipped: 'primary',
+        delivered: 'success',
+        cancelled: 'danger'
+    };
+    return statusClasses[status] || 'secondary';
+}
+
+function handleSearch() {
+    loadOrders();
+}
+
+function showLoading(show) {
+    const loadingElement = document.getElementById('loading-spinner');
+    if (loadingElement) {
+        loadingElement.style.display = show ? 'block' : 'none';
+    }
+}
+
+function showError(message) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: message
+        });
+    } else {
+        alert('Error: ' + message);
+    }
+}
+
+function showSuccess(message) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: message,
+            timer: 2000,
+            showConfirmButton: false
+        });
+    } else {
+        alert(message);
+    }
+}
+
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}

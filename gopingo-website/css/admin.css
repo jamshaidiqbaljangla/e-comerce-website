@@ -1,0 +1,224 @@
+/* Quick Admin CSS Fix - Create this as css/admin.css */
+
+/* Basic admin layout styles */
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    width: 260px;
+    background: #2c3e50;
+    color: white;
+    transition: all 0.3s;
+}
+
+.admin-sidebar.collapsed {
+    width: 70px;
+}
+
+.admin-main {
+    flex: 1;
+    background: #f8f9fa;
+    transition: all 0.3s;
+}
+
+.admin-main.expanded {
+    margin-left: -190px;
+}
+
+.admin-sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid #34495e;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-sidebar-header i {
+    font-size: 24px;
+    color: #3498db;
+}
+
+.admin-sidebar-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.admin-menu {
+    padding: 20px 0;
+}
+
+.admin-menu-header {
+    padding: 10px 20px;
+    font-size: 12px;
+    color: #95a5a6;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+.admin-menu-header:first-child {
+    margin-top: 0;
+}
+
+.admin-menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #ecf0f1;
+    text-decoration: none;
+    transition: all 0.3s;
+    gap: 12px;
+}
+
+.admin-menu-item:hover {
+    background: #34495e;
+    color: white;
+}
+
+.admin-menu-item.active {
+    background: #3498db;
+    color: white;
+}
+
+.admin-menu-item i {
+    width: 18px;
+    text-align: center;
+}
+
+.admin-header {
+    background: white;
+    padding: 15px 30px;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.toggle-sidebar {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #6c757d;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.toggle-sidebar:hover {
+    background: #f8f9fa;
+}
+
+.admin-header h1 {
+    margin: 0;
+    font-size: 24px;
+    color: #2c3e50;
+}
+
+.admin-content {
+    padding: 30px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown-toggle:hover {
+    background: #f8f9fa;
+}
+
+.badge {
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 10px;
+    position: absolute;
+    top: -2px;
+    right: -2px;
+}
+
+/* Form error styles */
+.form-error {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+
+.form-error.visible {
+    display: block;
+}
+
+.form-control.error {
+    border-color: #dc3545;
+}
+
+/* Loading button styles */
+.btn.loading .btn-text {
+    display: none;
+}
+
+.btn.loading .btn-loader {
+    display: inline-block;
+}
+
+.btn-loader {
+    display: none;
+}
+
+/* Login modal styles */
+#login-modal .modal-dialog {
+    max-width: 400px;
+    margin: auto;
+}
+
+#login-modal .form-group {
+    margin-bottom: 20px;
+}
+
+#login-modal .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+#login-modal .form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#login-modal .form-control:focus {
+    border-color: #0056b3;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+}

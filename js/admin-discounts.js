@@ -1,0 +1,295 @@
+// Admin Discounts/Coupons Management JavaScript - Real Data Integration
+document.addEventListener('DOMContentLoaded', function() {
+    window.discountsManager = new AdminDiscountsManager();
+    window.discountsManager.init();
+});
+
+class AdminDiscountsManager {
+    constructor() {
+        this.API_BASE = window.API_BASE || window.location.origin || 'https://ubiquitous-meringue-b2611a.netlify.app';
+        this.currentCoupons = [];
+        this.currentPage = 1;
+        this.totalPages = 1;
+    }
+
+    async init() {
+        await this.loadCoupons();
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        // Add coupon button
+        const addCouponBtn = document.getElementById('add-coupon-btn');
+        if (addCouponBtn) {
+            addCouponBtn.addEventListener('click', () => this.showAddCouponModal());
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', this.debounce((e) => this.handleSearch(e.target.value), 300));
+        }
+
+        // Refresh button
+        const refreshBtn = document.getElementById('refresh-btn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => this.loadCoupons());
+        }
+    }
+
+    async loadCoupons() {
+        try {
+            this.showLoading(true);
+            
+            const token = localStorage.getItem('adminToken');
+            const response = await fetch(`${this.API_BASE}/api/admin/coupons?page=${this.currentPage}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                this.currentCoupons = data.coupons;
+                this.totalPages = data.pagination.pages;
+                this.renderCouponsTable(data.coupons);
+                this.updateCouponsStats(data.coupons);
+            } else {
+                console.error('Failed to load coupons');
+                this.loadFallbackData();
+            }
+        } catch (error) {
+            console.error('Error loading coupons:', error);
+            this.loadFallbackData();
+        } finally {
+            this.showLoading(false);
+        }
+    }
+
+    loadFallbackData() {
+        // Fallback static data
+        this.currentCoupons = [
+            {
+                id: 1,
+                code: 'WELCOME10',
+                type: 'percentage',
+                value: 10,
+                description: '10% off for new customers',
+                min_order_amount: 50,
+                max_uses: 100,
+                used_count: 15,
+                active: 1,
+                expires_at: '2025-12-31',
+                created_at: '2025-01-01'
+            },
+            {
+                id: 2,
+                code: 'SAVE20',
+                type: 'fixed',
+                value: 20,
+                description: '$20 off orders over $100',
+                min_order_amount: 100,
+                max_uses: 50,
+                used_count: 8,
+                active: 1,
+                expires_at: '2025-06-30',
+                created_at: '2025-02-01'
+            },
+            {
+                id: 3,
+                code: 'FREESHIP',
+                type: 'fixed',
+                value: 5,
+                description: 'Free shipping coupon',
+                min_order_amount: 25,
+                max_uses: 200,
+                used_count: 45,
+                active: 1,
+                expires_at: '2025-12-31',
+                created_at: '2025-03-01'
+            }
+        ];
+        this.renderCouponsTable(this.currentCoupons);
+        this.updateCouponsStats(this.currentCoupons);
+    }
+
+    renderCouponsTable(coupons) {
+        const tableBody = document.querySelector('#coupons-table tbody');
+        if (!tableBody) return;
+
+        tableBody.innerHTML = '';
+
+        if (coupons.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center">
+                        <div class="empty-state">
+                            <i class="fas fa-tags"></i>
+                            <h3>No Coupons Found</h3>
+                            <p>Create your first coupon to start offering discounts to customers.</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        coupons.forEach(coupon => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <div class="coupon-code">
+                        <strong>${coupon.code}</strong>
+                        ${coupon.description ? `<small>${coupon.description}</small>` : ''}
+                    </div>
+                </td>
+                <td>
+                    <span class="discount-badge ${coupon.type}">
+                        ${coupon.type === 'percentage' ? `${coupon.value}%` : `$${coupon.value}`}
+                    </span>
+                </td>
+                <td>$${coupon.min_order_amount || 0}</td>
+                <td>${coupon.used_count || 0}/${coupon.max_uses || '∞'}</td>
+                <td>
+                    <span class="status-badge ${coupon.active ? 'active' : 'inactive'}">
+                        ${coupon.active ? 'Active' : 'Inactive'}
+                    </span>
+                </td>
+                <td>${this.formatDate(coupon.expires_at)}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn-icon edit-btn" onclick="discountsManager.editCoupon(${coupon.id})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon delete-btn" onclick="discountsManager.deleteCoupon(${coupon.id})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    updateCouponsStats(coupons) {
+        const totalCoupons = coupons.length;
+        const activeCoupons = coupons.filter(c => c.active).length;
+        const totalUses = coupons.reduce((sum, c) => sum + (c.used_count || 0), 0);
+
+        document.querySelector('#total-coupons')?.textContent = totalCoupons;
+        document.querySelector('#active-coupons')?.textContent = activeCoupons;
+        document.querySelector('#total-uses')?.textContent = totalUses;
+    }
+
+    formatDate(dateString) {
+        if (!dateString) return 'No expiry';
+        const date = new Date(dateString);
+        return date.toLocaleDateString();
+    }
+
+    showLoading(show) {
+        const loadingElement = document.querySelector('.loading-overlay');
+        if (loadingElement) {
+            loadingElement.style.display = show ? 'flex' : 'none';
+        }
+    }
+
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    async deleteCoupon(couponId) {
+        if (!confirm('Are you sure you want to delete this coupon?')) return;
+
+        try {
+            const token = localStorage.getItem('adminToken');
+            const response = await fetch(`${this.API_BASE}/api/admin/coupons/${couponId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                await this.loadCoupons();
+                this.showNotification('Coupon deleted successfully', 'success');
+            } else {
+                throw new Error('Failed to delete coupon');
+            }
+        } catch (error) {
+            console.error('Error deleting coupon:', error);
+            this.showNotification('Failed to delete coupon', 'error');
+        }
+    }
+
+    async createCoupon(couponData) {
+        try {
+            const token = localStorage.getItem('adminToken');
+            const response = await fetch(`${this.API_BASE}/api/admin/coupons`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(couponData)
+            });
+
+            if (response.ok) {
+                await this.loadCoupons();
+                this.showNotification('Coupon created successfully', 'success');
+                return true;
+            } else {
+                throw new Error('Failed to create coupon');
+            }
+        } catch (error) {
+            console.error('Error creating coupon:', error);
+            this.showNotification('Failed to create coupon', 'error');
+            return false;
+        }
+    }
+
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
+            color: white;
+            border-radius: 4px;
+            z-index: 10000;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+
+    handleSearch(searchTerm) {
+        // Implement search functionality
+        console.log('Searching for:', searchTerm);
+    }
+
+    showAddCouponModal() {
+        // Implement add coupon modal
+        console.log('Opening add coupon modal');
+    }
+
+    editCoupon(couponId) {
+        // Implement edit coupon functionality
+        console.log('Editing coupon:', couponId);
+    }
+}

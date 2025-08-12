@@ -1,0 +1,37 @@
+/* Fix hover functionality for product cards */
+.product-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.product-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Primary image is visible by default */
+.product-image .primary-image {
+    opacity: 1;
+    visibility: visible;
+    z-index: 1;
+}
+
+/* Hover image is hidden by default */
+.product-image .hover-image {
+    opacity: 0;
+    visibility: visible; /* Keep it in the DOM but transparent */
+    z-index: 2;
+}
+
+/* On hover, show hover image and hide primary image */
+.product-card:hover .primary-image {
+    opacity: 0;
+}
+
+.product-card:hover .hover-image {
+    opacity: 1;
+}

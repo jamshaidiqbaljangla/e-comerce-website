@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category | BINGO</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/category.css">
+    <link rel="stylesheet" href="css/notification.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header (Copy from index.html) -->
+    
+    <!-- Page Title (will be dynamically updated with category name) -->
+    <section class="page-title">
+        <div class="container">
+            <h1 id="category-title">Category</h1>
+            <div class="breadcrumb">
+                <a href="index.html">Home</a> / <a href="shop.html">Shop</a> / <span id="category-breadcrumb">Category</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Category Banner - SIMPLIFIED STRUCTURE -->
+    <section class="category-banner">
+        <div class="container">
+            <div class="category-banner-content">
+                <div class="category-description" id="category-description">
+                    <h2>Category Name</h2>
+                    <p>Explore our curated selection of premium products in this category. Each item is carefully selected to provide exceptional quality and style for our discerning customers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Shop Content (similar to shop.html) -->
+    <section class="shop-page">
+        <div class="container">
+            <div class="shop-header">
+                <div class="shop-filter-toggle">
+                    <button class="btn btn-sm filter-toggle-btn">
+                        <i class="fas fa-sliders-h"></i> Filters
+                    </button>
+                </div>
+                <div class="shop-results-count">
+                    Showing <span id="showing-count">1-12</span> of <span id="total-count">24</span> products
+                </div>
+                <div class="shop-sorting">
+                    <select id="shop-sort" class="form-select">
+                        <option value="default">Default sorting</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="name-asc">Name: A to Z</option>
+                        <option value="name-desc">Name: Z to A</option>
+                        <option value="newest">Newest first</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="shop-content">
+                <div class="shop-sidebar">
+                    <div class="filter-section">
+                        <h3>Categories</h3>
+                        <div class="filter-options" id="category-filters">
+                            <!-- Categories will be dynamically added here -->
+                            <div class="filter-option">
+                                <input type="checkbox" id="category-all">
+                                <label for="category-all">All Categories</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h3>Price Range</h3>
+                        <div class="price-slider">
+                            <div class="price-inputs">
+                                <div class="price-input">
+                                    <label for="min-price">Min</label>
+                                    <div class="input-wrap">
+                                        <span class="currency">$</span>
+                                        <input type="number" id="min-price" value="0" min="0">
+                                    </div>
+                                </div>
+                                <div class="price-input">
+                                    <label for="max-price">Max</label>
+                                    <div class="input-wrap">
+                                        <span class="currency">$</span>
+                                        <input type="number" id="max-price" value="500" min="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <button id="apply-price-filter" class="btn btn-dark btn-sm">Apply</button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-section">
+                        <h3>Product Status</h3>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="in-stock" checked>
+                                <label for="in-stock">In Stock</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="on-sale">
+                                <label for="on-sale">On Sale</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="new-arrival">
+                                <label for="new-arrival">New Arrival</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button id="reset-filters" class="btn btn-outline btn-sm">Reset Filters</button>
+                </div>
+                
+                <div class="shop-products">
+                    <div class="products-grid" id="products-grid">
+                        <!-- Products will be dynamically added here -->
+                        <div class="loading-products">
+                            <div class="spinner"></div>
+                            <p>Loading products...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="pagination" id="pagination">
+                        <!-- Pagination will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Related Categories -->
+    <section class="related-categories">
+        <div class="container">
+            <h2 class="section-title">Related Categories</h2>
+            <div class="category-grid" id="related-categories">
+                <!-- Related categories will be dynamically added here -->
+                <div class="loading-categories">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer (Copy from index.html) -->
+    
+    <!-- Quick View Modal (Copy from index.html) -->
+    
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/debug-config.js"></script>
+    <script src="js/products-data.js"></script>
+    <script src="js/product-renderer.js"></script>
+    <script src="js/cart-manager.js"></script>
+    <script src="js/wishlist-manager.js"></script>
+    <script src="js/category-manager.js"></script>
+    <script src="js/shop-manager.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

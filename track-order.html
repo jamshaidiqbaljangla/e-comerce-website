@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Order - BINGO</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <h1>BINGO</h1>
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1>Track Your Order</h1>
+                <p>Enter your order details below to track your shipment</p>
+            </div>
+
+            <div class="track-order-form">
+                <form id="tracking-form">
+                    <div class="form-group">
+                        <label for="order-number">Order Number</label>
+                        <input type="text" id="order-number" placeholder="Enter your order number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="Enter your email address" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Track Order</button>
+                </form>
+            </div>
+
+            <div id="tracking-results" class="tracking-results" style="display: none;">
+                <h3>Order Status</h3>
+                <div class="order-timeline">
+                    <div class="timeline-item completed">
+                        <div class="timeline-icon"><i class="fas fa-check"></i></div>
+                        <div class="timeline-content">
+                            <h4>Order Confirmed</h4>
+                            <p>Your order has been received and confirmed</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item completed">
+                        <div class="timeline-icon"><i class="fas fa-box"></i></div>
+                        <div class="timeline-content">
+                            <h4>Order Processed</h4>
+                            <p>Your order is being prepared for shipment</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item active">
+                        <div class="timeline-icon"><i class="fas fa-truck"></i></div>
+                        <div class="timeline-content">
+                            <h4>In Transit</h4>
+                            <p>Your order is on its way to you</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon"><i class="fas fa-home"></i></div>
+                        <div class="timeline-content">
+                            <h4>Delivered</h4>
+                            <p>Your order has been delivered</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <style>
+        .page-header {
+            text-align: center;
+            margin: 3rem 0;
+        }
+        
+        .track-order-form {
+            max-width: 500px;
+            margin: 0 auto 3rem;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .tracking-results {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .order-timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            opacity: 0.5;
+        }
+        
+        .timeline-item.completed,
+        .timeline-item.active {
+            opacity: 1;
+        }
+        
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+        }
+        
+        .timeline-item.completed .timeline-icon {
+            background: #28a745;
+        }
+        
+        .timeline-item.active .timeline-icon {
+            background: #007bff;
+        }
+        
+        .timeline-content h4 {
+            margin: 0 0 0.5rem;
+        }
+        
+        .timeline-content p {
+            margin: 0;
+            color: #666;
+        }
+    </style>
+
+    <script>
+        document.getElementById('tracking-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const orderNumber = document.getElementById('order-number').value.trim();
+            const email = document.getElementById('email').value.trim();
+            
+            if (orderNumber && email) {
+                // Show loading state
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Tracking...';
+                submitBtn.disabled = true;
+                
+                // Simulate API call delay
+                setTimeout(() => {
+                    document.getElementById('tracking-results').style.display = 'block';
+                    document.getElementById('tracking-results').scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Reset button
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    
+                    // Update order details with submitted info
+                    updateOrderDetails(orderNumber, email);
+                }, 1500);
+            }
+        });
+        
+        function updateOrderDetails(orderNumber, email) {
+            // Create order details section
+            const orderDetails = document.createElement('div');
+            orderDetails.className = 'order-details';
+            orderDetails.innerHTML = `
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; margin-bottom: 2rem;">
+                    <h4 style="margin: 0 0 0.5rem; color: #333;">Order Details</h4>
+                    <p style="margin: 0 0 0.25rem;"><strong>Order Number:</strong> ${orderNumber}</p>
+                    <p style="margin: 0 0 0.25rem;"><strong>Email:</strong> ${email}</p>
+                    <p style="margin: 0;"><strong>Estimated Delivery:</strong> ${getEstimatedDelivery()}</p>
+                </div>
+            `;
+            
+            // Insert before timeline
+            const timeline = document.querySelector('.order-timeline');
+            timeline.parentNode.insertBefore(orderDetails, timeline);
+        }
+        
+        function getEstimatedDelivery() {
+            const deliveryDate = new Date();
+            deliveryDate.setDate(deliveryDate.getDate() + 3);
+            return deliveryDate.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+        
+        // Add input validation styling
+        const inputs = document.querySelectorAll('input[required]');
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value.trim() === '') {
+                    this.style.borderColor = '#dc3545';
+                } else {
+                    this.style.borderColor = '#28a745';
+                }
+            });
+            
+            input.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    this.style.borderColor = '#ddd';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

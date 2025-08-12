@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signature Collection Item | BINGO</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/cart.css">
+    <link rel="stylesheet" href="css/notification.css">
+    <link rel="stylesheet" href="css/wishlist.css">
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/category.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/product-page.css">
+    <link rel="stylesheet" href="css/review-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="announcement-bar">
+        <div class="container">
+            <p>Free shipping on all orders over $75</p>
+            <div class="announcement-links">
+                <a href="track-order.html">Track Order</a>
+                <a href="contact.html">Support</a>
+                <select class="language-selector">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <h1>BINGO</h1>
+                </a>
+            </div>
+            <nav>
+                <ul class="menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="shop.html" class="active">Shop <i class="fas fa-chevron-down"></i></a>
+                        <div class="mega-menu">
+                            <div class="mega-menu-content">
+                                <div class="mega-menu-column">
+                                    <h3>Categories</h3>
+                                    <ul>
+                                        <li><a href="category.html">New Arrivals</a></li>
+                                        <li><a href="category.html">Best Sellers</a></li>
+                                        <li><a href="category.html">Limited Edition</a></li>
+                                        <li><a href="category.html">Sale Items</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mega-menu-column">
+                                    <h3>Collections</h3>
+                                    <ul>
+                                        <li><a href="collection.html">Summer 2025</a></li>
+                                        <li><a href="collection.html">Urban Series</a></li>
+                                        <li><a href="collection.html">Premium Collection</a></li>
+                                        <li><a href="collection.html">Lifestyle Essentials</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mega-menu-column featured-collection">
+                                    <div class="featured-collection-img">
+                                        <img src="images/featured-collection.jpg" alt="Featured Collection">
+                                        <div class="featured-collection-overlay">
+                                            <h3>New Arrivals</h3>
+                                            <p>Summer 2025 Collection</p>
+                                            <a href="collection.html" class="btn btn-light">Shop Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="search-container">
+                    <button class="search-toggle" aria-label="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div class="search-dropdown">
+                        <form class="search-form">
+                            <input type="text" placeholder="Search for products" aria-label="Search for products">
+                            <button type="submit"><i class="fas fa-search"></i></button>
+                        </form>
+                        <div class="search-suggestions">
+                            <div class="quick-links">
+                                <h4>Popular Searches</h4>
+                                <div class="tags">
+                                    <a href="search.html?q=new%20arrivals">New Arrivals</a>
+                                    <a href="search.html?q=best%20sellers">Best Sellers</a>
+                                    <a href="search.html?q=sale">Sale</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="account.html" class="account-toggle" aria-label="Account">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="wishlist.html" class="wishlist-toggle" aria-label="Wishlist">
+                    <i class="far fa-heart"></i>
+                    <span class="wishlist-count">0</span>
+                </a>
+                <div class="cart-container">
+                    <button class="cart-toggle" aria-label="Shopping Cart">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <div class="cart-dropdown">
+                        <div class="cart-header">
+                            <h3>Your Cart</h3>
+                            <button class="close-cart"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="cart-empty">
+                            <i class="fas fa-shopping-bag"></i>
+                            <p>Your cart is currently empty</p>
+                            <a href="shop.html" class="btn btn-dark">Start Shopping</a>
+                        </div>
+                        <div class="cart-items">
+                            </div>
+                        <div class="cart-footer">
+                            <div class="cart-total">
+                                <span>Total:</span>
+                                <span class="total-amount">$0.00</span>
+                            </div>
+                            <div class="cart-buttons">
+                                <a href="cart.html" class="btn btn-outline">View Cart</a>
+                                <a href="checkout.html" class="btn btn-dark">Checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="mobile-menu-toggle" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="mobile-menu-overlay">
+        <div class="mobile-menu-container">
+            <div class="mobile-menu-header">
+                <div class="logo">
+                    <h1>BINGO</h1>
+                </div>
+                <button class="mobile-menu-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="mobile-search">
+                <form class="search-form">
+                    <input type="text" placeholder="Search for products" aria-label="Search for products">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <nav class="mobile-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li class="has-submenu">
+                        <a href="shop.html" class="active">Shop</a>
+                        <button class="submenu-toggle"><i class="fas fa-chevron-down"></i></button>
+                        <ul class="mobile-submenu">
+                            <li><a href="category.html">New Arrivals</a></li>
+                            <li><a href="category.html">Best Sellers</a></li>
+                            <li><a href="category.html">Limited Edition</a></li>
+                            <li><a href="category.html">Sale Items</a></li>
+                            <li><a href="collection.html">Summer 2025</a></li>
+                            <li><a href="collection.html">Urban Series</a></li>
+                            <li><a href="collection.html">Premium Collection</a></li>
+                            <li><a href="collection.html">Lifestyle Essentials</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-actions">
+                <a href="account.html" class="btn btn-outline btn-sm">
+                    <i class="fas fa-user"></i> My Account
+                </a>
+                <a href="wishlist.html" class="btn btn-outline btn-sm">
+                    <i class="far fa-heart"></i> Wishlist
+                </a>
+            </div>
+            <div class="mobile-footer">
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                </div>
+                <p>© 2025 BINGO. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="breadcrumb-container">
+        <div class="container">
+            <nav class="breadcrumb" aria-label="breadcrumb">
+                <ol>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="category.html">Premium</a></li>
+                    <li aria-current="page">Signature Collection Item</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <section class="product-detail" data-product-id="product-1">
+        <div class="container">
+            <div class="product-detail-grid">
+                <div class="product-gallery">
+                    <div class="product-badges">
+                        <span class="badge new">New</span>
+                        <span class="badge sale">-20%</span>
+                    </div>
+                    
+                    <div class="main-image-slider">
+                        <div class="main-image-slide active">
+                            <img src="images/product-1.jpg" alt="Signature Collection Item" id="main-product-image">
+                        </div>
+                        <div class="main-image-slide">
+                            <img src="images/product-1-hover.jpg" alt="Signature Collection Item">
+                        </div>
+                        <div class="main-image-slide">
+                            <img src="images/product-1-alt-1.jpg" alt="Signature Collection Item">
+                        </div>
+                        <div class="main-image-slide">
+                            <img src="images/product-1-alt-2.jpg" alt="Signature Collection Item">
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-controls">
+                        <button class="gallery-prev" aria-label="Previous slide"><i class="fas fa-chevron-left"></i></button>
+                        <button class="gallery-next" aria-label="Next slide"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    
+                    <div class="thumbnail-slider">
+                        <div class="thumbnail active">
+                            <img src="images/product-1.jpg" alt="Thumbnail 1">
+                        </div>
+                        <div class="thumbnail">
+                            <img src="images/product-1-hover.jpg" alt="Thumbnail 2">
+                        </div>
+                        <div class="thumbnail">
+                            <img src="images/product-1-alt-1.jpg" alt="Thumbnail 3">
+                        </div>
+                        <div class="thumbnail">
+                            <img src="images/product-1-alt-2.jpg" alt="Thumbnail 4">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-info">
+                    <div class="product-categories">
+                        <a href="category.html?id=premium">Premium</a>
+                    </div>
+                    
+                    <h1 class="product-title">Signature Collection Item</h1>
+                    
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <a href="#reviews" class="review-link">42 reviews</a>
+                    </div>
+                    
+                    <div class="product-price">
+                        <span class="old-price">$249.00</span>
+                        <span class="current-price">$199.00</span>
+                        <span class="discount-badge">Save 20%</span>
+                    </div>
+                    
+                    <div class="product-description">
+                        <p>Elevate your lifestyle with our Signature Collection Item, designed for those who appreciate exceptional quality and timeless design. This premium piece features meticulous craftsmanship and attention to detail, making it a standout addition to any collection.</p>
+                    </div>
+                    
+                    <div class="product-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Premium materials</li>
+                            <li><i class="fas fa-check"></i> Sustainable manufacturing</li>
+                            <li><i class="fas fa-check"></i> Lifetime warranty</li>
+                            <li><i class="fas fa-check"></i> Exclusive to BINGO</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="product-options">
+                        <div class="product-colors">
+                            <h4>Color: <span class="selected-color">Black</span></h4>
+                            <div class="color-options">
+                                <label class="color-option">
+                                    <input type="radio" name="color" value="black" checked>
+                                    <span class="color-swatch" style="background-color: #222;" data-color="Black"></span>
+                                </label>
+                                <label class="color-option">
+                                    <input type="radio" name="color" value="blue">
+                                    <span class="color-swatch" style="background-color: #6e8cd5;" data-color="Blue"></span>
+                                </label>
+                                <label class="color-option">
+                                    <input type="radio" name="color" value="red">
+                                    <span class="color-swatch" style="background-color: #f56060;" data-color="Red"></span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="product-sizes">
+                            <h4>Size: <span class="selected-size">Medium</span></h4>
+                            <div class="size-guide-link">
+                                <a href="size-guide.html" target="_blank">Size Guide <i class="fas fa-external-link-alt"></i></a>
+                            </div>
+                            <div class="size-options">
+                                <label class="size-option">
+                                    <input type="radio" name="size" value="s">
+                                    <span class="size-label">S</span>
+                                </label>
+                                <label class="size-option">
+                                    <input type="radio" name="size" value="m" checked>
+                                    <span class="size-label">M</span>
+                                </label>
+                                <label class="size-option">
+                                    <input type="radio" name="size" value="l">
+                                    <span class="size-label">L</span>
+                                </label>
+                                <label class="size-option">
+                                    <input type="radio" name="size" value="xl">
+                                    <span class="size-label">XL</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="product-quantity">
+                        <h4>Quantity</h4>
+                        <div class="quantity-selector">
+                            <button type="button" class="quantity-decrease">-</button>
+                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="10">
+                            <button type="button" class="quantity-increase">+</button>
+                        </div>
+                        <span class="stock-status in-stock">In Stock</span>
+                    </div>
+                    
+                    <div class="product-actions">
+                        <button class="btn btn-dark btn-lg add-to-cart-btn">Add to Cart</button>
+                        <button class="btn btn-outline btn-lg buy-now-btn">Buy Now</button>
+                        <button class="wishlist-btn" aria-label="Add to wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">SKU:</span>
+                            <span class="meta-value">BINGO-SP-1001</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Category:</span>
+                            <span class="meta-value"><a href="category.html?id=premium">Premium</a></span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Tags:</span>
+                            <span class="meta-value">
+                                <a href="search.html?tag=signature">Signature</a>,
+                                <a href="search.html?tag=premium">Premium</a>,
+                                <a href="search.html?tag=collection">Collection</a>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="shipping-info">
+                        <div class="shipping-item">
+                            <div class="shipping-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="shipping-text">
+                                <h5>Free Shipping</h5>
+                                <p>On all orders over $75</p>
+                            </div>
+                        </div>
+                        <div class="shipping-item">
+                            <div class="shipping-icon">
+                                <i class="fas fa-undo"></i>
+                            </div>
+                            <div class="shipping-text">
+                                <h5>Easy Returns</h5>
+                                <p>30-day return policy</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-sharing">
+                        <span class="share-label">Share:</span>
+                        <a href="#" aria-label="Share on Facebook" class="social-share-btn"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Share on Twitter" class="social-share-btn"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Share on Pinterest" class="social-share-btn"><i class="fab fa-pinterest-p"></i></a>
+                        <a href="#" aria-label="Share via Email" class="social-share-btn"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="product-tabs-section">
+        <div class="container">
+            <div class="product-tabs">
+                <button class="product-tab active" data-tab="description">Description</button>
+                <button class="product-tab" data-tab="details">Additional Information</button>
+                <button class="product-tab" data-tab="reviews" id="reviews-tab">Reviews (42)</button>
+                <button class="product-tab" data-tab="shipping">Shipping & Returns</button>
+            </div>
+            
+            <div class="product-tab-content active" id="description">
+                <div class="description-content">
+                    <h3>Product Description</h3>
+                    <p>Designed with precision and crafted with care, our Signature Collection Item represents the pinnacle of BINGO's commitment to excellence. Each piece is meticulously created using premium materials that are sustainably sourced and processed to minimize environmental impact.</p>
+                    
+                    <p>The sleek, contemporary design is complemented by traditional craftsmanship techniques, resulting in a product that seamlessly blends modern aesthetics with timeless appeal. Every detail, from the fine stitching to the carefully selected materials, reflects our dedication to quality.</p>
+                    
+                    <div class="description-features">
+                        <div class="feature-column">
+                            <h4>Key Features</h4>
+                            <ul>
+                                <li>Premium construction with attention to detail</li>
+                                <li>Ethically sourced materials</li>
+                                <li>Handcrafted by skilled artisans</li>
+                                <li>Exclusive design only available at BINGO</li>
+                                <li>Versatile functionality for everyday use</li>
+                                <li>Durable construction for long-lasting performance</li>
+                            </ul>
+                        </div>
+                        <div class="feature-column">
+                            <h4>Materials</h4>
+                            <ul>
+                                <li>Premium materials - built to last</li>
+                                <li>Water-resistant finish</li>
+                                <li>Reinforced seams for durability</li>
+                                <li>Stain-resistant surface treatment</li>
+                                <li>Hypoallergenic materials</li>
+                                <li>Anti-bacterial protection</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h4>Care Instructions</h4>
+                    <p>To maintain the premium quality and appearance of your Signature Collection Item, we recommend the following care instructions:</p>
+                    <ul class="care-instructions">
+                        <li>Clean with a soft, damp cloth</li>
+                        <li>Avoid exposure to direct sunlight for prolonged periods</li>
+                        <li>Store in the provided dust bag when not in use</li>
+                        <li>Avoid contact with harsh chemicals or solvents</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="product-tab-content" id="details">
+                <div class="details-content">
+                    <h3>Additional Information</h3>
+                    <table class="specs-table">
+                        <tbody>
+                            <tr>
+                                <th>Dimensions</th>
+                                <td>12" x 8" x 4" (30.5cm x 20.3cm x 10.2cm)</td>
+                            </tr>
+                            <tr>
+                                <th>Weight</th>
+                                <td>2.4 lbs (1.1 kg)</td>
+                            </tr>
+                            <tr>
+                                <th>Materials</th>
+                                <td>Premium quality materials with eco-friendly components</td>
+                            </tr>
+                            <tr>
+                                <th>Colors</th>
+                                <td>Black, Blue, Red</td>
+                            </tr>
+                            <tr>
+                                <th>Sizes</th>
+                                <td>S, M, L, XL</td>
+                            </tr>
+                            <tr>
+                                <th>Country of Origin</th>
+                                <td>Made in USA</td>
+                            </tr>
+                            <tr>
+                                <th>Warranty</th>
+                                <td>Lifetime limited warranty against manufacturing defects</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="product-certifications">
+                        <h4>Certifications</h4>
+                        <div class="certification-badges">
+                            <div class="certification-badge">
+                                <img src="images/certification-1.png" alt="Eco-Friendly Certification">
+                                <span>Eco-Friendly</span>
+                            </div>
+                            <div class="certification-badge">
+                                <img src="images/certification-2.png" alt="Fair Trade Certification">
+                                <span>Fair Trade</span>
+                            </div>
+                            <div class="certification-badge">
+                                <img src="images/certification-3.png" alt="Sustainable Materials Certification">
+                                <span>Sustainable Materials</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reviews Tab Content - FIXED VERSION -->
+<div class="product-tab-content" id="reviews">
+    <div class="reviews-content">
+        <h3>Customer Reviews</h3>
+        <div class="review-summary">
+            <div class="rating-overview">
+                <div class="average-rating">
+                    <span class="rating-number">4.5</span>
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <span class="total-reviews">Based on 12 reviews</span>
+                </div>
+                <div class="rating-breakdown">
+                    <div class="rating-bar">
+                        <span class="star-label">5 Stars</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 70%;"></div>
+                        </div>
+                        <span class="count">29</span>
+                    </div>
+                    <div class="rating-bar">
+                        <span class="star-label">4 Stars</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 20%;"></div>
+                        </div>
+                        <span class="count">9</span>
+                    </div>
+                    <div class="rating-bar">
+                        <span class="star-label">3 Stars</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 5%;"></div>
+                        </div>
+                        <span class="count">2</span>
+                    </div>
+                    <div class="rating-bar">
+                        <span class="star-label">2 Stars</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 3%;"></div>
+                        </div>
+                        <span class="count">1</span>
+                    </div>
+                    <div class="rating-bar">
+                        <span class="star-label">1 Star</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 2%;"></div>
+                        </div>
+                        <span class="count">1</span>
+                    </div>
+                </div>
+            </div>
+            <div class="write-review">
+                <button class="btn btn-dark" id="write-review-btn">Write a Review</button>
+            </div>
+        </div>
+        
+        <!-- This is the critical missing container! -->
+        <div class="customer-reviews">
+            <!-- Reviews will be loaded here by ReviewManager -->
+            <div class="loading-reviews">
+                <div class="spinner"></div>
+                <p>Loading reviews...</p>
+            </div>
+        </div>
+        
+        <!-- Review Form (Hidden by default, shown when "Write a Review" is clicked) -->
+        <div class="review-form-container" style="display: none;">
+            <h3>Write a Review</h3>
+            <form class="review-form">
+                <div class="form-group">
+                    <label for="review-rating">Rating</label>
+                    <div class="rating-selector">
+                        <div class="stars">
+                            <i class="far fa-star" data-rating="1"></i>
+                            <i class="far fa-star" data-rating="2"></i>
+                            <i class="far fa-star" data-rating="3"></i>
+                            <i class="far fa-star" data-rating="4"></i>
+                            <i class="far fa-star" data-rating="5"></i>
+                        </div>
+                        <span class="rating-text">Click to rate</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="review-title">Review Title</label>
+                    <input type="text" id="review-title" class="form-control" placeholder="Summarize your experience" required>
+                </div>
+                <div class="form-group">
+                    <label for="review-text">Your Review</label>
+                    <textarea id="review-text" class="form-control" rows="5" placeholder="Share your experience with this product" required></textarea>
+                    <div class="form-hint">
+                        <span class="char-count">0/2000</span>
+                    </div>
+                </div>
+                
+                <div class="media-upload-container">
+                    <h4>Add Photos (Optional)</h4>
+                    <div class="media-dropzone">
+                        <i class="fas fa-camera"></i>
+                        <div class="media-dropzone-text">
+                            <p>Drag and drop photos here or click to upload</p>
+                            <small>Maximum 5 photos, 5MB each (JPG, PNG)</small>
+                        </div>
+                        <label class="upload-btn">
+                            <input type="file" id="review-media" multiple accept="image/*" style="display: none;">
+                            Choose Files
+                        </label>
+                    </div>
+                    <div class="media-preview"></div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="form-privacy">
+                        <label class="checkbox-container">
+                            <input type="checkbox" required>
+                            <span class="checkmark"></span>
+                            <span>I agree that my review and profile information will be publicly displayed. I have read and accepted the <a href="terms.html">Terms of Service</a> and <a href="privacy.html">Privacy Policy</a>.</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-outline" id="cancel-review-btn">Cancel</button>
+                    <button type="submit" class="btn btn-dark">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+            
+            <div class="product-tab-content" id="shipping">
+                <div class="shipping-content">
+                    <h3>Shipping & Returns</h3>
+                    
+                    <div class="shipping-info-tabs">
+                        <div class="shipping-info-tab">
+                            <div class="info-tab-header">
+                                <h4><i class="fas fa-truck"></i> Shipping Information</h4>
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="info-tab-content">
+                                <p>We offer the following shipping options for your convenience:</p>
+                                <table class="shipping-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Shipping Method</th>
+                                            <th>Estimated Delivery</th>
+                                            <th>Cost</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Standard Shipping</td>
+                                            <td>3-5 Business Days</td>
+                                            <td>$7.95 (Free on orders over $75)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Express Shipping</td>
+                                            <td>2 Business Days</td>
+                                            <td>$12.95</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Next Day Delivery</td>
+                                            <td>Next Business Day</td>
+                                            <td>$24.95</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p>Please note: Shipping times are estimates and begin from the date of shipment, not the date of order. Orders placed after 2:00 PM EST will be processed the following business day.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="shipping-info-tab">
+                            <div class="info-tab-header">
+                                <h4><i class="fas fa-undo"></i> Returns & Exchanges</h4>
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="info-tab-content">
+                                <p>We want you to be completely satisfied with your purchase. If for any reason you are not, we offer a simple return and exchange policy:</p>
+                                <ul>
+                                    <li>Returns and exchanges are accepted within 30 days of the delivery date.</li>
+                                    <li>Items must be in their original condition, unworn/unused, with all original tags and packaging.</li>
+                                    <li>To initiate a return or exchange, please visit our <a href="returns.html">Returns Portal</a> or contact our customer service team.</li>
+                                    <li>Once your return is received and inspected, a refund will be processed to your original method of payment within 3-5 business days.</li>
+                                    <li>Return shipping costs are the responsibility of the customer unless the item is defective or incorrect.</li>
+                                </ul>
+                                <p>For detailed information on our return process, please visit our <a href="returns-policy.html">Returns Policy</a> page.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="shipping-info-tab">
+                            <div class="info-tab-header">
+                                <h4><i class="fas fa-globe-americas"></i> International Shipping</h4>
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="info-tab-content">
+                                <p>We ship to most countries worldwide. International shipping rates and delivery times vary by location:</p>
+                                <ul>
+                                    <li>Canada: 5-7 business days, starting at $15.95</li>
+                                    <li>Europe: 7-10 business days, starting at $24.95</li>
+                                    <li>Australia/New Zealand: 10-14 business days, starting at $29.95</li>
+                                    <li>Rest of World: 14-21 business days, starting at $34.95</li>
+                                </ul>
+                                <p>Please note that international orders may be subject to import duties and taxes, which are the customer's responsibility to pay upon delivery.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="shipping-info-tab">
+                            <div class="info-tab-header">
+                                <h4><i class="fas fa-shield-alt"></i> Warranty Information</h4>
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="info-tab-content">
+                                <p>Our Signature Collection items come with a Lifetime Limited Warranty that covers manufacturing defects. This warranty includes:</p>
+                                <ul>
+                                    <li>Manufacturing defects in materials and workmanship</li>
+                                    <li>Structural integrity issues</li>
+                                    <li>Premature wear under normal use conditions</li>
+                                </ul>
+                                <p>The warranty does not cover damage resulting from misuse, accidents, improper care, or normal wear and tear.</p>
+                                <p>To submit a warranty claim, please contact our customer service department with your order number and photos of the defect.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="recently-viewed">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Recently Viewed</h2>
+                <p class="section-subtitle">Products you've recently explored</p>
+            </div>
+            <div class="products-slider">
+                <div class="products-slider-wrapper">
+                    </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-prev" aria-label="Previous slide"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-next" aria-label="Next slide"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <section class="you-may-also-like">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">You May Also Like</h2>
+                <p class="section-subtitle">Customers who bought this item also purchased</p>
+            </div>
+            <div class="products-slider">
+                <div class="products-slider-wrapper">
+                    </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-prev" aria-label="Previous slide"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-next" aria-label="Next slide"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-widgets">
+                    <div class="footer-widget about-widget">
+                        <div class="footer-logo">
+                            <h1>BINGO</h1>
+                        </div>
+                        <p class="about-text">Bingo is a premium lifestyle brand dedicated to creating exceptional products for discerning customers who value quality and sophistication.</p>
+                        <div class="social-icons">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-widget">
+                        <h3 class="widget-title">Shop</h3>
+                        <ul class="widget-list">
+                            <li><a href="category.html">New Arrivals</a></li>
+                            <li><a href="category.html">Best Sellers</a></li>
+                            <li><a href="category.html">Limited Edition</a></li>
+                            <li><a href="category.html">Sale</a></li>
+                            <li><a href="category.html">Coming Soon</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-widget">
+                        <h3 class="widget-title">Information</h3>
+                        <ul class="widget-list">
+                            <li><a href="about.html">About Us</a></li>
+                            <li><a href="blog.html">Our Blog</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                            <li><a href="careers.html">Careers</a></li>
+                            <li><a href="stores.html">Store Locator</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-widget">
+                        <h3 class="widget-title">Customer Service</h3>
+                        <ul class="widget-list">
+                            <li><a href="faq.html">FAQs</a></li>
+                            <li><a href="shipping.html">Shipping & Returns</a></li>
+                            <li><a href="warranty.html">Warranty & Repairs</a></li>
+                            <li><a href="size-guide.html">Size Guide</a></li>
+                            <li><a href="contact.html">Contact Support</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-widget contact-widget">
+                        <h3 class="widget-title">Contact</h3>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="contact-text">
+                                    <p>123 Fashion Avenue, Suite 500<br>Los Angeles, CA 90210</p>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="contact-text">
+                                    <p>+1 (800) 123-4567<br>Mon-Fri: 9am - 6pm PST</p>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="contact-text">
+                                    <p>info@bingoshop.com<br>support@bingoshop.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-middle">
+            <div class="container">
+                <div class="footer-features">
+                    <div class="footer-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Free Shipping</h4>
+                            <p>On all orders over $75</p>
+                        </div>
+                    </div>
+                    <div class="footer-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-undo"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Easy Returns</h4>
+                            <p>30-day return policy</p>
+                        </div>
+                    </div>
+                    <div class="footer-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Secure Payments</h4>
+                            <p>100% secure checkout</p>
+                        </div>
+                    </div>
+                    <div class="footer-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Dedicated Support</h4>
+                            <p>24/7 customer service</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <div class="copyright">
+                        <p>&copy; 2025 BINGO. All rights reserved.</p>
+                    </div>
+                    <div class="footer-links">
+                        <ul>
+                            <li><a href="terms.html">Terms of Service</a></li>
+                            <li><a href="privacy.html">Privacy Policy</a></li>
+                            <li><a href="cookies.html">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="payment-methods">
+                        <img src="images/payment-methods.png" alt="Payment Methods">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <button id="back-to-top" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script src="js/products-data.js"></script>
+    <script src="js/auth-manager.js"></script>
+    <script src="js/product-renderer.js"></script>
+    <script src="js/cart-manager.js"></script>
+    <script src="js/wishlist-manager.js"></script>
+    <script src="js/shop-manager.js"></script>
+    <script src="js/category.js"></script>
+    <script src="js/search-manager.js"></script>
+    <script src="js/account-manager.js"></script>
+    <script src="js/collection-manager.js"></script>
+    <script src="js/product-page.js"></script>
+    <script src="js/reviews-data.js"></script>
+    <script src="js/review-manager.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

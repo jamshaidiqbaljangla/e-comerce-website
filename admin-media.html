@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="e            <div class="header">
+                <div class="header-top">
+                    <h1><i class="fas fa-photo-video"></i> Media Management</h1>
+                    <a href="admin.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+                </div>
+                <p>Manage all your website's media assets, organized by section.</p>
+                
+                <div class="optimization-info">
+                    <h3><i class="fas fa-bolt"></i> Automatic Image Optimization</h3>
+                    <p>All uploaded images are automatically optimized for web:</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> <strong>WebP & AVIF formats</strong> created for modern browsers</li>
+                        <li><i class="fas fa-check"></i> <strong>Responsive sizes</strong> generated for different devices</li>
+                        <li><i class="fas fa-check"></i> <strong>Optimized quality</strong> for faster loading</li>
+                    </ul>
+                    <p><small>* The original image is always preserved alongside the optimized versions</small></p>
+                </div>
+            </div>ad>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Media Management</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <h2>Admin</h2>
+            <ul>
+                <li><a href="admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="admin-products.html"><i class="fas fa-box"></i> Products</a></li>
+                <li><a href="admin-categories.html"><i class="fas fa-sitemap"></i> Categories</a></li>
+                <li><a href="admin-collections.html"><i class="fas fa-layer-group"></i> Collections</a></li>
+                <li><a href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li><a href="admin-customers.html"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="admin-discount.html"><i class="fas fa-tags"></i> Discount</a></li>
+                <li><a href="admin-pages.html"><i class="fas fa-file-alt"></i> Pages</a></li>
+                <li><a href="admin-blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                <li><a href="admin-media.html" class="active"><i class="fas fa-photo-video"></i> Media</a></li>
+                <li><a href="admin-settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="admin-user.html"><i class="fas fa-user-cog"></i> Users</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-top">
+                    <h1><i class="fas fa-photo-video"></i> Media Management</h1>
+                    <a href="admin.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+                </div>
+                <p>Manage all your website’s media assets, organized by section.</p>
+            </div>
+
+            <div class="content-area">
+                <!-- Hero Banner Section -->
+                <div class="media-section" id="hero-section">
+                    <div class="media-section-header">
+                        <h2>Hero Banners</h2>
+                        <button class="btn btn-primary btn-sm add-media-btn" data-section="hero"><i class="fas fa-plus"></i> Add Banner</button>
+                    </div>
+                    <div class="media-grid"></div>
+                </div>
+
+                <!-- Categories Section -->
+                <div class="media-section" id="categories-section">
+                    <div class="media-section-header">
+                        <h2>Category Images</h2>
+                        <button class="btn btn-primary btn-sm add-media-btn" data-section="categories"><i class="fas fa-plus"></i> Add Image</button>
+                    </div>
+                    <div class="media-grid"></div>
+                </div>
+
+                <!-- Feature Banner Section -->
+                <div class="media-section" id="feature-banner-section">
+                    <div class="media-section-header">
+                        <h2>Feature Banner</h2>
+                        <button class="btn btn-primary btn-sm add-media-btn" data-section="feature-banner"><i class="fas fa-plus"></i> Add Image</button>
+                    </div>
+                    <div class="media-grid"></div>
+                </div>
+
+                <!-- Instagram Feed Section -->
+                <div class="media-section" id="instagram-section">
+                    <div class="media-section-header">
+                        <h2>Instagram Feed</h2>
+                        <button class="btn btn-primary btn-sm add-media-btn" data-section="instagram"><i class="fas fa-plus"></i> Add Image</button>
+                    </div>
+                    <div class="media-grid"></div>
+                </div>
+                
+                <!-- General Product Images -->
+                <div class="media-section" id="products-section">
+                    <div class="media-section-header">
+                        <h2>Product Images</h2>
+                        <a href="admin-products.html" class="btn btn-secondary btn-sm"><i class="fas fa-box"></i> Manage in Products</a>
+                    </div>
+                    <div class="media-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Upload/Edit Media -->
+    <div id="media-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="media-modal-title">Upload Media</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="uploader">
+                    <div class="upload-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag and drop files here, or click to select files.</p>
+                        <input type="file" id="file-input" multiple style="display:none;">
+                    </div>
+                    <div id="preview-area"></div>
+                </div>
+                <div id="replace-preview" style="display:none;">
+                    <h4>Replace Image</h4>
+                    <div style="display:flex; gap: 20px;">
+                        <div>
+                            <p><strong>Current</strong></p>
+                            <img id="current-image-preview" src="" alt="Current Image" style="max-width:150px; border-radius: 8px;">
+                        </div>
+                        <div>
+                            <p><strong>New</strong></p>
+                            <img id="new-image-preview" src="" alt="New Image" style="max-width:150px; border-radius: 8px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary close-btn">Cancel</button>
+                <button class="btn btn-primary" id="save-media-btn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin-media.js"></script>
+</body>
+</html>

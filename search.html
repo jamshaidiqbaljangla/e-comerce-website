@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results | BINGO</title>
+    <!-- Base styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Core styles - order matters -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/notification.css">
+    <link rel="stylesheet" href="css/mega-menu-fix.min.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <h1>BINGO</h1>
+                </a>
+            </div>
+            <nav>
+                <ul class="menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="shop.html">Shop <i class="fas fa-chevron-down"></i></a>
+                        <div class="mega-menu">
+                            <!-- Mega menu content here -->
+                        </div>
+                    </li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="search-container">
+                    <button class="search-toggle" aria-label="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div class="search-dropdown">
+                        <form class="search-form">
+                            <input type="text" placeholder="Search for products" aria-label="Search for products">
+                            <button type="button" class="clear-search" aria-label="Clear search"><i class="fas fa-times"></i></button>
+                            <button type="submit"><i class="fas fa-search"></i></button>
+                        </form>
+                        <div class="search-suggestions">
+                            <!-- Dynamic content will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+                <a href="account.html" class="account-toggle" aria-label="Account">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="wishlist.html" class="wishlist-toggle" aria-label="Wishlist">
+                    <i class="far fa-heart"></i>
+                    <span class="wishlist-count">0</span>
+                </a>
+                <div class="cart-container">
+                    <button class="cart-toggle" aria-label="Shopping Cart">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <!-- Cart dropdown content here -->
+                </div>
+                <button class="mobile-menu-toggle" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="container">
+            <h1 id="search-heading">Search Results</h1>
+            <div class="breadcrumb">
+                <a href="index.html">Home</a> / <span>Search</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Search Page Content -->
+    <section class="search-page">
+        <div class="container">
+            <!-- Search Results Header -->
+            <div class="search-results-header">
+                <div class="search-info">
+                    Found <span id="result-count">0</span> results
+                </div>
+                <div class="search-filter">
+                    <select id="search-sort" class="form-select">
+                        <option value="relevance">Relevance</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="newest">Newest First</option>
+                    </select>
+                </div>
+                <div class="search-actions">
+                    <a href="shop.html" class="btn btn-outline btn-sm">Browse All Products</a>
+                </div>
+            </div>
+            
+            <!-- Search Results Container -->
+            <div class="search-results-container">
+                <div id="search-results" class="search-results">
+                    <!-- Search results will be dynamically added here -->
+                    <div class="searching">
+                        <div class="spinner"></div>
+                        <p>Searching...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Related Searches -->
+            <div class="related-searches-container" id="related-searches">
+                <h3>Related Searches</h3>
+                <div class="related-searches">
+                    <!-- Will be dynamically populated -->
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <!-- Footer content here -->
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="copyright">
+                    <p>&copy; 2025 BINGO. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <button id="back-to-top" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <!-- Scripts - order matters -->
+    <script src="js/products-data.js"></script>
+    <script src="js/search-manager.js"></script>
+    <script src="js/product-renderer.js"></script>
+    <script src="js/cart-manager.js"></script>
+    <script src="js/wishlist-manager.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

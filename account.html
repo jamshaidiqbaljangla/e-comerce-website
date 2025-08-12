@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account | BINGO</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/search.css">
+    <link rel="stylesheet" href="css/notification.css">
+    <link rel="stylesheet" href="css/cart.css">
+    <link rel="stylesheet" href="css/wishlist.css">
+    <link rel="stylesheet" href="css/account.css">
+    <link rel="stylesheet" href="css/mega-menu-fix.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <h1>BINGO</h1>
+                </a>
+            </div>
+            <nav>
+                <ul class="menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="dropdown">
+                        <a href="shop.html">Shop <i class="fas fa-chevron-down"></i></a>
+                        <div class="mega-menu">
+                            <!-- Mega menu content here -->
+                        </div>
+                    </li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="search-container">
+                    <button class="search-toggle" aria-label="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div class="search-dropdown">
+                        <form class="search-form">
+                            <input type="text" placeholder="Search for products" aria-label="Search for products">
+                            <button type="button" class="clear-search" aria-label="Clear search"><i class="fas fa-times"></i></button>
+                            <button type="submit"><i class="fas fa-search"></i></button>
+                        </form>
+                        <div class="search-suggestions">
+                            <!-- Dynamic content will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+                <a href="account.html" class="account-toggle active" aria-label="Account">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="wishlist.html" class="wishlist-toggle" aria-label="Wishlist">
+                    <i class="far fa-heart"></i>
+                    <span class="wishlist-count">3</span>
+                </a>
+                <div class="cart-container">
+                    <button class="cart-toggle" aria-label="Shopping Cart">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">2</span>
+                    </button>
+                    <!-- Cart dropdown content -->
+                </div>
+                <button class="mobile-menu-toggle" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="container">
+            <h1>My Account</h1>
+            <div class="breadcrumb">
+                <a href="index.html">Home</a> / <span>My Account</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Account Dashboard -->
+    <section class="account-dashboard">
+        <div class="container">
+            <div class="account-header">
+                <div class="account-welcome">
+                    <div class="account-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="account-welcome-text">
+                        <h1 id="welcome-name">Welcome to your Account</h1>
+                        <p>Manage your profile, orders, and wishlist</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="account-tabs">
+                <div class="account-tab active" data-tab="dashboard">Dashboard</div>
+                <div class="account-tab" data-tab="orders">Orders</div>
+                <div class="account-tab" data-tab="addresses">Addresses</div>
+                <div class="account-tab" data-tab="payment">Payment Methods</div>
+                <div class="account-tab" data-tab="wishlist">Wishlist</div>
+                <div class="account-tab" data-tab="settings">Account Settings</div>
+            </div>
+            
+            <!-- Dashboard Tab -->
+            <div class="tab-content active" id="dashboard">
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="stat-number" id="order-count">0</div>
+                        <div class="stat-label">Total Orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-number" id="pending-count">0</div>
+                        <div class="stat-label">In Progress</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="stat-number" id="wishlist-count">0</div>
+                        <div class="stat-label">Wishlist Items</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <div class="stat-number">5</div>
+                        <div class="stat-label">Available Coupons</div>
+                    </div>
+                </div>
+                
+                <h3>Recent Orders</h3>
+                <div id="recent-orders-container">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-orders">
+                            <!-- Recent orders will be loaded here -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="empty-state" id="no-orders-message" style="display: none;">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h3>No Orders Yet</h3>
+                        <p>Looks like you haven't placed any orders yet. Start shopping to see your orders here.</p>
+                        <a href="shop.html" class="btn btn-dark">Start Shopping</a>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <a href="#" class="btn btn-outline" data-tab="orders">View All Orders</a>
+                </div>
+            </div>
+            
+            <!-- Orders Tab -->
+            <div class="tab-content" id="orders">
+                <h3>Your Orders</h3>
+                <div id="all-orders-container">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="all-orders">
+                            <!-- All orders will be loaded here -->
+                        </tbody>
+                    </table>
+                    
+                    <div class="empty-state" id="no-all-orders-message" style="display: none;">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h3>No Orders Yet</h3>
+                        <p>You haven't placed any orders yet. Browse our products and make your first purchase!</p>
+                        <a href="shop.html" class="btn btn-dark">Explore Products</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Addresses Tab -->
+            <div class="tab-content" id="addresses">
+                <div class="section-header">
+                    <h3>Your Addresses</h3>
+                    <p>Manage your shipping and billing addresses</p>
+                    <button id="add-address-btn" class="btn btn-dark btn-sm">Add New Address</button>
+                </div>
+                
+                <div id="addresses-container">
+                    <div class="address-cards" id="address-list">
+                        <!-- Addresses will be loaded here -->
+                    </div>
+                    
+                    <div class="empty-state" id="no-addresses-message" style="display: none;">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>No Addresses Saved</h3>
+                        <p>You haven't added any addresses yet. Add an address for faster checkout.</p>
+                        <button id="empty-add-address-btn" class="btn btn-dark">Add Address</button>
+                    </div>
+                </div>
+                
+                <!-- Address Form Modal -->
+                <div id="address-modal" class="modal">
+                    <div class="modal-content">
+                        <button class="modal-close" aria-label="Close modal"><i class="fas fa-times"></i></button>
+                        <h3 id="address-modal-title">Add New Address</h3>
+                        <form id="address-form">
+                            <input type="hidden" id="address-id" value="">
+                            
+                            <div class="form-group">
+                                <label for="address-name">Full Name</label>
+                                <input type="text" id="address-name" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address-line1">Address Line 1</label>
+                                <input type="text" id="address-line1" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address-line2">Address Line 2 (Optional)</label>
+                                <input type="text" id="address-line2" class="form-control">
+                            </div>
+                            
+                            <div class="input-group">
+                                <div class="form-group">
+                                    <label for="address-city">City</label>
+                                    <input type="text" id="address-city" class="form-control" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="address-state">State/Province</label>
+                                    <input type="text" id="address-state" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <div class="form-group">
+                                    <label for="address-zip">Zip/Postal Code</label>
+                                    <input type="text" id="address-zip" class="form-control" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="address-country">Country</label>
+                                    <select id="address-country" class="form-control" required>
+                                        <option value="">Select Country</option>
+                                        <option value="US">United States</option>
+                                        <option value="CA">Canada</option>
+                                        <option value="UK">United Kingdom</option>
+                                        <!-- More countries can be added -->
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="address-phone">Phone Number</label>
+                                <input type="tel" id="address-phone" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" id="address-default">
+                                    <span class="checkmark"></span>
+                                    <span>Set as default address</span>
+                                </label>
+                            </div>
+                            
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-dark btn-full">Save Address</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Payment Methods Tab -->
+            <div class="tab-content" id="payment">
+                <div class="section-header">
+                    <h3>Your Payment Methods</h3>
+                    <p>Manage your saved payment methods</p>
+                    <button id="add-payment-btn" class="btn btn-dark btn-sm">Add New Card</button>
+                </div>
+                
+                <div id="payment-methods-container">
+                    <div class="payment-methods" id="payment-list">
+                        <!-- Payment methods will be loaded here -->
+                    </div>
+                    
+                    <div class="empty-state" id="no-payments-message" style="display: none;">
+                        <i class="fas fa-credit-card"></i>
+                        <h3>No Payment Methods Saved</h3>
+                        <p>You haven't saved any payment methods yet. Add a payment method for faster checkout.</p>
+                        <button id="empty-add-payment-btn" class="btn btn-dark">Add Payment Method</button>
+                    </div>
+                </div>
+                
+                <!-- Payment Method Form Modal -->
+                <div id="payment-modal" class="modal">
+                    <div class="modal-content">
+                        <button class="modal-close" aria-label="Close modal"><i class="fas fa-times"></i></button>
+                        <h3 id="payment-modal-title">Add New Payment Method</h3>
+                        <form id="payment-form">
+                            <input type="hidden" id="payment-id" value="">
+                            
+                            <div class="form-group">
+                                <label for="card-number">Card Number</label>
+                                <input type="text" id="card-number" class="form-control" placeholder="XXXX XXXX XXXX XXXX" required>
+                            </div>
+                            
+                            <div class="input-group">
+                                <div class="form-group">
+                                    <label for="card-name">Cardholder Name</label>
+                                    <input type="text" id="card-name" class="form-control" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="card-expiry">Expiry Date</label>
+                                    <input type="text" id="card-expiry" class="form-control" placeholder="MM/YY" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="card-cvv">CVV</label>
+                                <input type="text" id="card-cvv" class="form-control" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-dark btn-full">Save Card</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Wishlist Tab -->
+            <div class="tab-content" id="wishlist">
+                <div class="section-header">
+                    <h3>Your Wishlist</h3>
+                    <p>Items you've saved for later</p>
+                </div>
+                
+                <div id="wishlist-container">
+                    <div class="wishlist-items" id="wishlist-list">
+                        <!-- Wishlist items will be loaded here -->
+                    </div>
+                    
+                    <div class="empty-state" id="no-wishlist-message" style="display: none;">
+                        <i class="fas fa-heart"></i>
+                        <h3>Your Wishlist is Empty</h3>
+                        <p>Save items you like to your wishlist. We'll notify you when they go on sale.</p>
+                        <a href="shop.html" class="btn btn-dark">Browse Products</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div class="tab-content" id="settings">
+                <div class="section-header">
+                    <h3>Account Settings</h3>
+                    <p>Update your personal information and password</p>
+                </div>
+                
+                <div class="account-settings">
+                    <form id="account-form">
+                        <h4>Personal Information</h4>
+                        <div class="input-group">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" name="firstName" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="form-control">
+                        </div>
+                        
+                        <h4>Change Password</h4>
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" name="currentPassword" class="form-control">
+                        </div>
+                        
+                        <div class="input-group">
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" name="newPassword" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <h4>Communication Preferences</h4>
+                        <div class="form-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="emailPromo" name="emailPromo" checked>
+                                <span class="checkmark"></span>
+                                <span class="privacy-text">Email me about new products and promotions</span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="emailOrder" name="emailOrder" checked>
+                                <span class="checkmark"></span>
+                                <span class="privacy-text">Email me about order updates</span>
+                            </label>
+                        </div>
+                        
+                        <div class="account-actions">
+                            <button type="submit" class="btn btn-dark">Save Changes</button>
+                            <button type="button" id="logout-btn" class="btn btn-outline">Logout</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-widgets">
+                    <div class="footer-widget about-widget">
+                        <div class="footer-logo">
+                            <h1>BINGO</h1>
+                        </div>
+                        <p class="about-text">Bingo is a premium lifestyle brand dedicated to creating exceptional products for discerning customers who value quality and sophistication.</p>
+                        <div class="social-icons">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <div class="copyright">
+                        <p>&copy; 2025 BINGO. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Back to Top Button -->
+    <button id="back-to-top" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+    
+    <!-- Scripts -->
+    <script src="js/products-data.js"></script>
+    <script src="js/auth-manager.js"></script>
+
+    <script src="js/search-manager.js"></script>
+    <script src="js/cart-manager.js"></script>
+    <script src="js/wishlist-manager.js"></script>
+    <script src="js/account-manager.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

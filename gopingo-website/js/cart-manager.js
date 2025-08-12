@@ -1,0 +1,738 @@
+/**
+ * BINGO E-commerce Cart Manager - Database Integration
+ * Handles all shopping cart functionality with API persistence
+ */
+
+window.CartManager = {
+    // Cart data structure
+    cart: {
+        items: [],
+        subtotal: 0,
+        shipping: 0,
+        total: 0
+    },
+
+    // Local storage fallback for guest users
+    GUEST_CART_KEY: 'bingoGuestCart',
+
+    /**
+     * Initialize the cart manager
+     */
+    init: function() {
+        console.log('[DEBUG] cart-manager.js: Cart Manager initializing with API integration...');
+        
+        // Check if PRODUCTS is available (may be loading asynchronously)
+        if (typeof window.PRODUCTS === 'undefined') {
+            console.warn('[DEBUG] cart-manager.js: PRODUCTS data is not available. Cart Manager functionality may be limited.');
+        }
+        
+        this.loadCart();
+        this.bindEvents();
+        this.updateCartDisplay();
+        
+        console.log('[DEBUG] cart-manager.js: Cart Manager initialized with API integration.');
+    },
+
+    /**
+     * Check if user is authenticated
+     */
+    isUserAuthenticated: function() {
+        return window.AuthManager && window.AuthManager.isAuthenticated();
+    },
+
+    /**
+     * Load cart from API or localStorage
+     */
+    async loadCart() {
+        console.log('[DEBUG] cart-manager.js: Loading cart...');
+        
+        try {
+            if (this.isUserAuthenticated()) {
+                // Load from API for authenticated users
+                console.log('[DEBUG] cart-manager.js: Loading cart from API for authenticated user');
+                this.cart = await window.CART_API.getCart();
+            } else {
+                // Load from localStorage for guest users
+                console.log('[DEBUG] cart-manager.js: Loading cart from localStorage for guest user');
+                this.loadGuestCartFromStorage();
+            }
+            
+            this.updateCartDisplay();
+            console.log('[DEBUG] cart-manager.js: Cart loaded successfully:', this.cart);
+        } catch (error) {
+            console.error('[DEBUG] cart-manager.js: Error loading cart:', error);
+            // Fallback to empty cart
+            this.resetCart();
+        }
+    },
+
+    /**
+     * Load guest cart from localStorage
+     */
+    loadGuestCartFromStorage: function() {
+        const savedCart = localStorage.getItem(this.GUEST_CART_KEY);
+        if (savedCart) {
+            try {
+                const parsedCart = JSON.parse(savedCart);
+                if (parsedCart && Array.isArray(parsedCart.items)) {
+                    this.cart = parsedCart;
+                    this.calculateTotals();
+                    console.log('[DEBUG] cart-manager.js: Guest cart loaded from localStorage:', this.cart);
+                } else {
+                    console.warn('[DEBUG] cart-manager.js: Invalid guest cart data in localStorage. Resetting.');
+                    this.resetCart();
+                }
+            } catch (e) {
+                console.error('[DEBUG] cart-manager.js: Error parsing guest cart from localStorage. Resetting cart.', e);
+                this.resetCart();
+            }
+        } else {
+            console.log('[DEBUG] cart-manager.js: No guest cart data found in localStorage.');
+            this.resetCart();
+        }
+    },
+
+    /**
+     * Save guest cart to localStorage
+     */
+    saveGuestCartToStorage: function() {
+        try {
+            localStorage.setItem(this.GUEST_CART_KEY, JSON.stringify(this.cart));
+            console.log('[DEBUG] cart-manager.js: Guest cart saved to localStorage.');
+        } catch (e) {
+            console.error('[DEBUG] cart-manager.js: Error saving guest cart to localStorage:', e);
+        }
+    },
+
+    /**
+     * Reset cart to empty state
+     */
+    resetCart: function() {
+        this.cart = { items: [], subtotal: 0, shipping: 0, total: 0 };
+        
+        if (!this.isUserAuthenticated()) {
+            this.saveGuestCartToStorage();
+        }
+    },
+
+    /**
+     * Calculate cart totals
+     */
+    calculateTotals: function() {
+        this.cart.subtotal = this.cart.items.reduce((total, item) => {
+            return total + (item.price * item.quantity);
+        }, 0);
+        this.cart.shipping = this.cart.subtotal >= 75 ? 0 : 10;
+        this.cart.total = this.cart.subtotal + this.cart.shipping;
+        console.log('[DEBUG] cart-manager.js: Totals calculated:', this.cart);
+    },
+
+    /**
+     * Migrate guest cart to authenticated user cart
+     */
+    async migrateGuestCart() {
+        if (!this.isUserAuthenticated()) return;
+        
+        const guestCart = localStorage.getItem(this.GUEST_CART_KEY);
+        if (!guestCart) return;
+        
+        try {
+            const parsedGuestCart = JSON.parse(guestCart);
+            if (parsedGuestCart && parsedGuestCart.items && parsedGuestCart.items.length > 0) {
+                console.log('[DEBUG] cart-manager.js: Migrating guest cart to authenticated user');
+                
+                // Add each guest cart item to the user's cart
+                for (const item of parsedGuestCart.items) {
+                    await window.CART_API.addToCart(item.id, item.quantity);
+                }
+                
+                // Clear guest cart
+                localStorage.removeItem(this.GUEST_CART_KEY);
+                
+                // Reload the cart
+                await this.loadCart();
+                
+                this.showNotification('Your cart items have been restored!', 'success');
+            }
+        } catch (error) {
+            console.error('[DEBUG] cart-manager.js: Error migrating guest cart:', error);
+        }
+    },
+
+    /**
+     * Bind all cart-related events
+     */
+    bindEvents: function() {
+        console.log('[DEBUG] cart-manager.js: Binding events...');
+        
+        // Use event delegation for add-to-cart buttons
+        document.body.addEventListener('click', (e) => {
+            const addToCartBtn = e.target.closest('.add-to-cart-btn');
+            if (addToCartBtn && !addToCartBtn.disabled) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.handleAddToCart.call(this, {
+                    currentTarget: addToCartBtn,
+                    preventDefault: () => {},
+                    stopPropagation: () => {}
+                });
+            }
+        });
+
+        // Cart toggle
+        const cartToggle = document.querySelector('.cart-toggle');
+        if (cartToggle && !cartToggle.dataset.cartManagerToggleBound) {
+            cartToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const cartContainer = this.closest('.cart-container');
+                if (cartContainer) {
+                    const isActive = cartContainer.classList.toggle('active');
+                    document.querySelector('.cart-dropdown').classList.toggle('show', isActive);
+                    console.log('[DEBUG] cart-manager.js: Cart toggled.', isActive);
+                }
+            });
+            cartToggle.dataset.cartManagerToggleBound = 'true';
+        }
+
+        // Close cart button
+        const closeCartBtn = document.querySelector('.close-cart');
+        if (closeCartBtn && !closeCartBtn.dataset.cartManagerCloseBound) {
+            closeCartBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const cartContainer = document.querySelector('.cart-container');
+                if (cartContainer) cartContainer.classList.remove('active');
+                document.querySelector('.cart-dropdown').classList.remove('show');
+                console.log('[DEBUG] cart-manager.js: Cart closed by button.');
+            });
+            closeCartBtn.dataset.cartManagerCloseBound = 'true';
+        }
+
+        // Click outside to close cart
+        if (!document.body.dataset.cartManagerOutsideClickBound) {
+            document.addEventListener('click', (e) => {
+                const cartContainer = document.querySelector('.cart-container');
+                const searchContainer = document.querySelector('.search-container');
+
+                if (cartContainer && cartContainer.classList.contains('active') && 
+                    !cartContainer.contains(e.target) && !e.target.closest('.cart-toggle')) {
+                    cartContainer.classList.remove('active');
+                    document.querySelector('.cart-dropdown').classList.remove('show');
+                    console.log('[DEBUG] cart-manager.js: Cart closed by outside click.');
+                }
+
+                if (searchContainer && searchContainer.classList.contains('active') && 
+                    !searchContainer.contains(e.target) && !e.target.closest('.search-toggle')) {
+                    searchContainer.classList.remove('active');
+                }
+            });
+            document.body.dataset.cartManagerOutsideClickBound = 'true';
+        }
+
+        // Event delegation for cart item actions
+        if (!document.body.dataset.cartManagerItemActionsBound) {
+            document.addEventListener('click', async (e) => {
+                const isRemove = e.target.closest('.remove-item');
+                const isQtyIncrease = e.target.closest('.qty-increase');
+                const isQtyDecrease = e.target.closest('.qty-decrease');
+
+                if (!isRemove && !isQtyIncrease && !isQtyDecrease) return;
+
+                const cartItemElement = e.target.closest('.cart-item[data-product-id]');
+                const cartPageItemElement = e.target.closest('.cart-page .cart-item[data-product-id]');
+                const targetItemElement = cartItemElement || cartPageItemElement;
+
+                if (!targetItemElement) return;
+
+                const itemId = targetItemElement.getAttribute('data-product-id');
+                if (!itemId) return;
+
+                try {
+                    if (isRemove) {
+                        console.log('[DEBUG] cart-manager.js: Removing item:', itemId);
+                        await this.removeItem(itemId);
+                    } else if (isQtyIncrease) {
+                        console.log('[DEBUG] cart-manager.js: Increasing quantity for item:', itemId);
+                        await this.updateQuantity(itemId, 1);
+                    } else if (isQtyDecrease) {
+                        console.log('[DEBUG] cart-manager.js: Decreasing quantity for item:', itemId);
+                        await this.updateQuantity(itemId, -1);
+                    }
+                } catch (error) {
+                    console.error('[DEBUG] cart-manager.js: Error updating cart:', error);
+                    this.showNotification('Error updating cart. Please try again.', 'error');
+                }
+            });
+            document.body.dataset.cartManagerItemActionsBound = 'true';
+        }
+
+        // Listen for authentication events to migrate guest cart
+        document.addEventListener('userAuthenticated', () => {
+            console.log('[DEBUG] cart-manager.js: User authenticated, migrating guest cart');
+            this.migrateGuestCart();
+        });
+
+        console.log('[DEBUG] cart-manager.js: Event bindings complete.');
+    },
+
+    /**
+     * Handle add to cart button click
+     */
+    async handleAddToCart(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    
+        const button = e.currentTarget;
+        console.log('[DEBUG] cart-manager.js: handleAddToCart triggered by button:', button);
+    
+        if (button.disabled) {
+            console.warn('[DEBUG] cart-manager.js: Add to cart button is disabled.');
+            return;
+        }
+    
+        let productId, quantity = 1;
+        const quickViewDetails = button.closest('.quick-view-details');
+        const productCard = button.closest('.product-card');
+    
+        if (quickViewDetails) {
+            console.log('[DEBUG] cart-manager.js: Adding from quick view.');
+            const quickViewRoot = quickViewDetails.closest('.quick-view-content');
+            productId = quickViewRoot ? quickViewRoot.getAttribute('data-product-id') : null;
+            if (!productId) {
+                const modalContent = button.closest('.modal-content');
+                if (modalContent) productId = modalContent.getAttribute('data-product-id');
+            }
+    
+            const quantityInput = quickViewDetails.querySelector('#quantity');
+            quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+            console.log('[DEBUG] cart-manager.js: Quick view - Product ID:', productId, 'Quantity:', quantity);
+    
+        } else if (productCard) {
+            console.log('[DEBUG] cart-manager.js: Adding from product card.');
+            productId = productCard.getAttribute('data-product-id');
+            console.log('[DEBUG] cart-manager.js: Product card - Product ID:', productId, 'Quantity:', quantity);
+        } else {
+            console.error('[DEBUG] cart-manager.js: Could not determine product ID from button context. Button:', button);
+            this.showNotification('Error: Could not identify product.', 'error');
+            return;
+        }
+    
+        if (!productId) {
+            console.error('[DEBUG] cart-manager.js: Product ID is missing or could not be determined.');
+            this.showNotification('Error: Product ID not found.', 'error');
+            return;
+        }
+    
+        try {
+            await this.addToCart(productId, quantity);
+            
+            // Close quick view modal if open
+            const quickViewModal = document.getElementById('quick-view-modal');
+            if (quickViewModal && quickViewModal.classList.contains('show')) {
+                quickViewModal.classList.remove('show');
+                document.body.style.overflow = '';
+                console.log('[DEBUG] cart-manager.js: Quick view modal closed.');
+            }
+        } catch (error) {
+            console.error('[DEBUG] cart-manager.js: Error adding to cart:', error);
+            this.showNotification('Error adding item to cart. Please try again.', 'error');
+        }
+    },
+
+    /**
+     * Add item to cart (API or localStorage)
+     */
+    async addToCart(productId, quantity = 1) {
+        console.log('[DEBUG] cart-manager.js: Adding item to cart:', productId, 'Quantity:', quantity);
+        
+        try {
+            if (this.isUserAuthenticated()) {
+                // Add to cart via API
+                await window.CART_API.addToCart(productId, quantity);
+                
+                // Reload cart from API
+                this.cart = await window.CART_API.getCart();
+            } else {
+                // Add to guest cart in localStorage
+                await this.addToGuestCart(productId, quantity);
+            }
+            
+            this.updateCartDisplay();
+            this.enhanceCartFeedback();
+            
+            // Get product name for notification
+            let productName = 'Item';
+            try {
+                if (window.PRODUCTS && window.PRODUCTS.getProductById) {
+                    const product = await window.PRODUCTS.getProductById(productId);
+                    if (product) {
+                        productName = product.name;
+                    }
+                }
+            } catch (error) {
+                console.warn('[DEBUG] cart-manager.js: Could not get product name for notification');
+            }
+            
+            this.showNotification(`${quantity} "${productName}" ${quantity > 1 ? 'were' : 'was'} added to your cart`);
+            
+        } catch (error) {
+            console.error('[DEBUG] cart-manager.js: Error adding to cart:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Add item to guest cart (localStorage)
+     */
+    async addToGuestCart(productId, quantity) {
+        // Get product details
+        let productData = null;
+        
+        try {
+            if (window.PRODUCTS && window.PRODUCTS.getProductById) {
+                productData = await window.PRODUCTS.getProductById(productId);
+            }
+        } catch (error) {
+            console.error('[DEBUG] cart-manager.js: Error fetching product data:', error);
+        }
+        
+        if (!productData) {
+            // Try to extract from DOM as fallback
+            const productCard = document.querySelector(`[data-product-id="${productId}"]`);
+            if (productCard) {
+                const nameElement = productCard.querySelector('.product-title a, .product-name');
+                const priceElement = productCard.querySelector('.current-price, .product-price');
+                const imageElement = productCard.querySelector('.primary-image, .product-image');
+                
+                if (nameElement && priceElement && imageElement) {
+                    const name = nameElement.textContent.trim();
+                    const priceText = priceElement.textContent.replace(/[^0-9.]/g, '');
+                    const price = parseFloat(priceText);
+                    const image = imageElement.getAttribute('src');
+                    
+                    productData = {
+                        id: productId,
+                        name: name,
+                        price: price,
+                        images: { primary: image }
+                    };
+                }
+            }
+        }
+        
+        if (!productData) {
+            throw new Error('Product data not found');
+        }
+        
+        // Add to guest cart
+        const existingItem = this.cart.items.find(item => item.id === productId);
+        
+        if (existingItem) {
+            existingItem.quantity += quantity;
+        } else {
+            this.cart.items.push({
+                id: productData.id,
+                name: productData.name,
+                price: productData.price,
+                quantity: quantity,
+                image: productData.images.primary
+            });
+        }
+        
+        this.calculateTotals();
+        this.saveGuestCartToStorage();
+    },
+
+    /**
+     * Remove item from cart
+     */
+    async removeItem(itemId) {
+        console.log('[DEBUG] cart-manager.js: Removing item ID from cart:', itemId);
+        
+        try {
+            if (this.isUserAuthenticated()) {
+                await window.CART_API.removeFromCart(itemId);
+                this.cart = await window.CART_API.getCart();
+            } else {
+                this.cart.items = this.cart.items.filter(item => item.id !== itemId);
+                this.calculateTotals();
+                this.saveGuestCartToStorage();
+            }
+            
+            this.updateCartDisplay();
+        } catch (error) {
+            console.error('[DEBUG] cart-manager.js: Error removing item:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Update cart item quantity
+     */
+    async updateQuantity(itemId, change) {
+        console.log('[DEBUG] cart-manager.js: Updating quantity for item ID:', itemId, 'Change:', change);
+        
+        try {
+            if (this.isUserAuthenticated()) {
+                const item = this.cart.items.find(i => i.id === itemId);
+                if (!item) {
+                    console.warn('[DEBUG] cart-manager.js: Item not found for quantity update:', itemId);
+                    return;
+                }
+                
+                const newQuantity = item.quantity + change;
+                
+                if (newQuantity <= 0) {
+                    await this.removeItem(itemId);
+                    return;
+                }
+                
+                await window.CART_API.updateCartItem(itemId, newQuantity);
+                this.cart = await window.CART_API.getCart();
+            } else {
+                const item = this.cart.items.find(i => i.id === itemId);
+                if (!item) {
+                    console.warn('[DEBUG] cart-manager.js: Item not found for quantity update:', itemId);
+                    return;
+                }
+                
+                item.quantity += change;
+                
+                if (item.quantity <= 0) {
+                    await this.removeItem(itemId);
+                    return;
+                }
+                
+                this.calculateTotals();
+                this.saveGuestCartToStorage();
+            }
+            
+            console.log('[DEBUG] cart-manager.js: Quantity updated successfully');
+            this.updateCartDisplay();
+            this.enhanceCartFeedback();
+        } catch (error) {
+            console.error('[DEBUG] cart-manager.js: Error updating quantity:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Enhanced feedback for cart actions
+     */
+    enhanceCartFeedback: function() {
+        // Make cart count pulse to draw attention
+        const cartCount = document.querySelector('.cart-count');
+        if (cartCount) {
+            cartCount.style.animation = 'none';
+            setTimeout(() => {
+                cartCount.style.animation = 'pulse 0.5s';
+            }, 10);
+        }
+        
+        // Flash the cart icon
+        const cartToggle = document.querySelector('.cart-toggle');
+        if (cartToggle) {
+            cartToggle.classList.add('highlight');
+            setTimeout(() => {
+                cartToggle.classList.remove('highlight');
+            }, 700);
+        }
+
+        // Briefly show the cart dropdown
+        const cartDropdown = document.querySelector('.cart-dropdown');
+        if (cartDropdown) {
+            cartDropdown.classList.add('show');
+            const cartContainer = document.querySelector('.cart-container');
+            if (cartContainer) cartContainer.classList.add('active');
+            
+            // Hide it after a delay
+            setTimeout(() => {
+                cartDropdown.classList.remove('show');
+                if (cartContainer) cartContainer.classList.remove('active');
+            }, 3000);
+        }
+    },
+
+    /**
+     * Update cart display
+     */
+    updateCartDisplay: function() {
+        console.log('[DEBUG] cart-manager.js: Updating cart display...');
+        const cartCountElement = document.querySelector('.cart-count');
+        const totalItems = this.cart.items.reduce((count, item) => count + item.quantity, 0);
+    
+        if (cartCountElement) {
+            cartCountElement.textContent = totalItems;
+        }
+    
+        const cartDropdownItemsContainer = document.querySelector('.cart-dropdown .cart-items');
+        const cartDropdownEmptyMsg = document.querySelector('.cart-dropdown .cart-empty');
+        const cartDropdownTotalAmount = document.querySelector('.cart-dropdown .total-amount');
+    
+        if (cartDropdownItemsContainer && cartDropdownEmptyMsg) {
+            if (this.cart.items.length === 0) {
+                cartDropdownEmptyMsg.style.display = 'flex';
+                cartDropdownItemsContainer.innerHTML = '';
+            } else {
+                cartDropdownEmptyMsg.style.display = 'none';
+                let itemsHtml = '';
+                this.cart.items.forEach(item => {
+                    itemsHtml += `
+                        <div class="cart-item" data-product-id="${item.id}">
+                            <div class="cart-item-image">
+                                <img src="${item.image}" alt="${item.name}">
+                            </div>
+                            <div class="cart-item-content">
+                                <h4>${item.name}</h4>
+                                <div class="item-price">
+                                    <div class="item-quantity">
+                                        <button class="qty-decrease">-</button>
+                                        <span style="display: inline-block; min-width: 20px; text-align: center; font-weight: 500;">${item.quantity}</span>
+                                        <button class="qty-increase">+</button>
+                                    </div>
+                                    <div class="item-amount">$${(item.price * item.quantity).toFixed(2)}</div>
+                                </div>
+                            </div>
+                            <button class="remove-item"><i class="fas fa-times"></i></button>
+                        </div>
+                    `;
+                });
+                cartDropdownItemsContainer.innerHTML = itemsHtml;
+            }
+        }
+    
+        if (cartDropdownTotalAmount) {
+            cartDropdownTotalAmount.textContent = `$${this.cart.total.toFixed(2)}`;
+        }
+        
+        this.updateCartPage();
+        console.log('[DEBUG] cart-manager.js: Cart display updated.');
+    },
+
+    /**
+     * Update cart page
+     */
+    updateCartPage: function() {
+        const cartTableBody = document.querySelector('.cart-page .cart-table tbody');
+        if (!cartTableBody) return; // Not on cart page
+        
+        console.log('[DEBUG] cart-manager.js: Updating cart page content...');
+    
+        const cartActions = document.querySelector('.cart-page .cart-actions');
+        const cartTotalsSection = document.querySelector('.cart-page .cart-totals');
+    
+        if (this.cart.items.length === 0) {
+            cartTableBody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="empty-cart-message">
+                        <div class="empty-cart">
+                            <i class="fas fa-shopping-bag"></i>
+                            <p>Your cart is currently empty</p>
+                            <a href="shop.html" class="btn btn-dark">Continue Shopping</a>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            if (cartActions) cartActions.style.display = 'none';
+            if (cartTotalsSection) cartTotalsSection.style.display = 'none';
+        } else {
+            let rowsHtml = '';
+            this.cart.items.forEach(item => {
+                rowsHtml += `
+                    <tr class="cart-item" data-product-id="${item.id}">
+                        <td class="product-remove">
+                            <button class="remove-item"><i class="fas fa-times"></i></button>
+                        </td>
+                        <td class="product-thumbnail">
+                            <img src="${item.image}" alt="${item.name}">
+                        </td>
+                        <td class="product-name">
+                            <a href="product.html?id=${item.id}">${item.name}</a>
+                        </td>
+                        <td class="product-price">$${item.price.toFixed(2)}</td>
+                        <td class="product-quantity">
+                            <div class="quantity-selector">
+                                <button class="qty-decrease">-</button>
+                                <div style="display: inline-block; min-width: 30px; text-align: center; font-weight: 500;">${item.quantity}</div>
+                                <button class="qty-increase">+</button>
+                            </div>
+                        </td>
+                        <td class="product-subtotal">$${(item.price * item.quantity).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+            cartTableBody.innerHTML = rowsHtml;
+    
+            if (cartActions) cartActions.style.display = 'flex';
+            if (cartTotalsSection) {
+                cartTotalsSection.style.display = 'block'; 
+                const subtotalEl = cartTotalsSection.querySelector('.subtotal-amount');
+                const shippingEl = cartTotalsSection.querySelector('.shipping-amount');
+                const totalEl = cartTotalsSection.querySelector('.total-amount');
+    
+                if (subtotalEl) subtotalEl.textContent = `$${this.cart.subtotal.toFixed(2)}`;
+                if (shippingEl) shippingEl.textContent = this.cart.shipping === 0 ? 'Free' : `$${this.cart.shipping.toFixed(2)}`;
+                if (totalEl && totalEl.closest('.cart-totals')) totalEl.textContent = `$${this.cart.total.toFixed(2)}`;
+            }
+        }
+        console.log('[DEBUG] cart-manager.js: Cart page content updated.');
+    },
+
+    /**
+     * Show notification
+     */
+    showNotification: function(message, type = 'success') {
+        console.log(`[DEBUG] cart-manager.js: Showing notification - Type: ${type}, Message: ${message}`);
+        const notificationContainer = document.getElementById('notification-container') || this.createNotificationContainer();
+        
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="${type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'}"></i>
+                <p>${message}</p>
+            </div>
+            <button class="notification-close"><i class="fas fa-times"></i></button>
+        `;
+        
+        notificationContainer.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('show');
+        }, 10);
+
+        const closeBtn = notification.querySelector('.notification-close');
+        let autoCloseTimeoutId = setTimeout(() => closeNotification(notification), 3000);
+
+        closeBtn.addEventListener('click', () => closeNotification(notification, autoCloseTimeoutId), { once: true });
+        
+        function closeNotification(notif, timeoutIdToClear = null) {
+            if (timeoutIdToClear) clearTimeout(timeoutIdToClear);
+            if (!notif || !notif.parentNode) return;
+
+            notif.classList.remove('show');
+            notif.classList.add('hide');
+            
+            notif.addEventListener('transitionend', () => {
+                if (notif.parentNode) {
+                    notif.parentNode.removeChild(notif);
+                }
+            }, { once: true });
+        }
+    },
+
+    /**
+     * Create notification container
+     */
+    createNotificationContainer: function() {
+        let container = document.getElementById('notification-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'notification-container';
+            document.body.appendChild(container);
+            console.log('[DEBUG] cart-manager.js: Notification container created.');
+        }
+        return container;
+    }
+};
+
+console.log('[DEBUG] cart-manager.js: CartManager object defined with API integration:', typeof window.CartManager, window.CartManager);

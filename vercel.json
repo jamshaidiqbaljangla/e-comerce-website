@@ -1,0 +1,4 @@
+{
+  "deprecated": true,
+  "note": "Netlify is the target platform; this Vercel config is kept for reference only."
+}

@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BINGO | Premium Lifestyle Products</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/cart.css">
+    <link rel="stylesheet" href="css/notification.css">
+    <link rel="stylesheet" href="css/wishlist.css">
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/category.css">
+    <link rel="stylesheet" href="css/search.css">
+    
+
+
+
+
+
+
+
+   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Announcement Bar -->
+
+    <div class="announcement-bar">
+        <div class="container">
+            <p>Free shipping on all orders over $75</p>
+            <div class="announcement-links">
+                <a href="track-order.html">Track Order</a>
+                <a href="contact.html">Support</a>
+                <select class="language-selector">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Español</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <h1>BINGO</h1>
+                </a>
+            </div>
+            <nav>
+                <ul class="menu">
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li class="dropdown">
+                        <a href="shop.html">Shop <i class="fas fa-chevron-down"></i></a>
+                        <div class="mega-menu">
+                            <div class="mega-menu-content">
+                                <div class="mega-menu-column">
+                                    <h3>Categories</h3>
+                                    <ul>
+                                        <li><a href="category.html">New Arrivals</a></li>
+                                        <li><a href="category.html">Best Sellers</a></li>
+                                        <li><a href="category.html">Limited Edition</a></li>
+                                        <li><a href="category.html">Sale Items</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mega-menu-column">
+                                    <h3>Collections</h3>
+                                    <ul>
+                                        <li><a href="collection.html">Summer 2025</a></li>
+                                        <li><a href="collection.html">Urban Series</a></li>
+                                        <li><a href="collection.html">Premium Collection</a></li>
+                                        <li><a href="collection.html">Lifestyle Essentials</a></li>
+                                    </ul>
+                                </div>
+                                <div class="mega-menu-column featured-collection">
+                                    <div class="featured-collection-img">
+                                        <img src="images/featured-collection.jpg" alt="Featured Collection">
+                                        <div class="featured-collection-overlay">
+                                            <h3>New Arrivals</h3>
+                                            <p>Summer 2025 Collection</p>
+                                            <a href="collection.html" class="btn btn-light">Shop Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="header-actions">
+                <div class="search-container">
+                    <button class="search-toggle" aria-label="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <div class="search-dropdown">
+                        <form class="search-form">
+                            <input type="text" placeholder="Search for products" aria-label="Search for products">
+                            <button type="submit"><i class="fas fa-search"></i></button>
+                        </form>
+                        <div class="search-suggestions">
+                            <div class="quick-links">
+                                <h4>Popular Searches</h4>
+                                <div class="tags">
+                                    <a href="search.html?q=new%20arrivals">New Arrivals</a>
+                                    <a href="search.html?q=best%20sellers">Best Sellers</a>
+                                    <a href="search.html?q=sale">Sale</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="account.html" class="account-toggle" aria-label="Account">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="wishlist.html" class="wishlist-toggle" aria-label="Wishlist">
+                    <i class="far fa-heart"></i>
+                    <span class="wishlist-count">0</span>
+                </a>
+                <div class="cart-container">
+                    <button class="cart-toggle" aria-label="Shopping Cart">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <div class="cart-dropdown">
+                        <div class="cart-header">
+                            <h3>Your Cart</h3>
+                            <button class="close-cart"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="cart-empty">
+                            <i class="fas fa-shopping-bag"></i>
+                            <p>Your cart is currently empty</p>
+                            <a href="shop.html" class="btn btn-dark">Start Shopping</a>
+                        </div>
+                        <div class="cart-items">
+                            <!-- Cart items will be dynamically added here -->
+                        </div>
+                        <div class="cart-footer">
+                            <div class="cart-total">
+                                <span>Total:</span>
+                                <span class="total-amount">$0.00</span>
+                            </div>
+                            <div class="cart-buttons">
+                                <a href="cart.html" class="btn btn-outline">View Cart</a>
+                                <a href="checkout.html" class="btn btn-dark">Checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="mobile-menu-toggle" aria-label="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay">
+        <div class="mobile-menu-container">
+            <div class="mobile-menu-header">
+                <div class="logo">
+                    <h1>BINGO</h1>
+                </div>
+                <button class="mobile-menu-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="mobile-search">
+                <form class="search-form">
+                    <input type="text" placeholder="Search for products" aria-label="Search for products">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <nav class="mobile-nav">
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li class="has-submenu">
+                        <a href="shop.html">Shop</a>
+                        <button class="submenu-toggle"><i class="fas fa-chevron-down"></i></button>
+                        <ul class="mobile-submenu">
+                            <li><a href="category.html">New Arrivals</a></li>
+                            <li><a href="category.html">Best Sellers</a></li>
+                            <li><a href="category.html">Limited Edition</a></li>
+                            <li><a href="category.html">Sale Items</a></li>
+                            <li><a href="collection.html">Summer 2025</a></li>
+                            <li><a href="collection.html">Urban Series</a></li>
+                            <li><a href="collection.html">Premium Collection</a></li>
+                            <li><a href="collection.html">Lifestyle Essentials</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <div class="mobile-actions">
+                <a href="account.html" class="btn btn-outline btn-sm">
+                    <i class="fas fa-user"></i> My Account
+                </a>
+                <a href="wishlist.html" class="btn btn-outline btn-sm">
+                    <i class="far fa-heart"></i> Wishlist
+                </a>
+            </div>
+            <div class="mobile-footer">
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                </div>
+                <p>© 2025 BINGO. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero full-width">
+        <div class="hero-slider">
+            <div class="hero-slide active">
+                <div class="hero-image">
+                    <picture>
+                        <source media="(max-width: 767px)" srcset="images/hero-mobile-1.jpg">
+                        <img src="images/hero-1.jpg" alt="Premium Collection 2025">
+                    </picture>
+                </div>
+                <div class="container">
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <h4 class="subtitle">New Arrivals</h4>
+                            <h2 class="title">Premium Collection 2025</h2>
+                            <p class="description">Elevate your lifestyle with our latest premium collection, designed for those who appreciate exceptional quality and timeless design.</p>
+                            <div class="hero-buttons">
+                                <a href="collection.html" class="btn btn-dark">Shop Collection</a>
+                                <a href="lookbook.html" class="btn btn-outline">View Lookbook</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-slide">
+                <div class="hero-image">
+                    <picture>
+                        <source media="(max-width: 767px)" srcset="images/hero-mobile-2.jpg">
+                        <img src="images/hero-2.jpg" alt="Limited Edition Series">
+                    </picture>
+                </div>
+                <div class="container">
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <h4 class="subtitle">Exclusive Items</h4>
+                            <h2 class="title">Limited Edition Series</h2>
+                            <p class="description">Discover our limited edition collection, featuring exclusive designs that won't be available for long.</p>
+                            <div class="hero-buttons">
+                                <a href="collection.html" class="btn btn-dark">Shop Now</a>
+                                <a href="about.html" class="btn btn-outline">Read Our Story</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-slide">
+                <div class="hero-image">
+                    <picture>
+                        <source media="(max-width: 767px)" srcset="images/hero-mobile-3.jpg">
+                        <img src="images/hero-3.jpg" alt="Summer Essentials">
+                    </picture>
+                </div>
+                <div class="container">
+                    <div class="hero-content">
+                        <div class="hero-text">
+                            <h4 class="subtitle">Season Favorites</h4>
+                            <h2 class="title">Summer Essentials</h2>
+                            <p class="description">Everything you need for the perfect summer, curated with quality and style in mind.</p>
+                            <div class="hero-buttons">
+                                <a href="collection.html" class="btn btn-dark">Explore</a>
+                                <a href="blog.html" class="btn btn-outline">Summer Guide</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-controls">
+            <button class="prev-slide" aria-label="Previous slide"><i class="fas fa-chevron-left"></i></button>
+            <div class="hero-dots">
+                <button class="hero-dot active" aria-label="Slide 1"></button>
+                <button class="hero-dot" aria-label="Slide 2"></button>
+                <button class="hero-dot" aria-label="Slide 3"></button>
+            </div>
+            <button class="next-slide" aria-label="Next slide"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Shop by Category</h2>
+                <p class="section-subtitle">Explore our wide range of premium collections</p>
+            </div>
+            <div class="categories-grid">
+                <a href="category.html" class="category-card">
+                    <div class="category-image">
+                        <img src="images/category-1.jpg" alt="Category 1">
+                    </div>
+                    <div class="category-content">
+                        <h3>New Arrivals</h3>
+                        <span class="shop-link">Shop Now <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="category.html" class="category-card">
+                    <div class="category-image">
+                        <img src="images/category-2.jpg" alt="Category 2">
+                    </div>
+                    <div class="category-content">
+                        <h3>Best Sellers</h3>
+                        <span class="shop-link">Shop Now <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="category.html" class="category-card">
+                    <div class="category-image">
+                        <img src="images/category-3.jpg" alt="Category 3">
+                    </div>
+                    <div class="category-content">
+                        <h3>Premium Collection</h3>
+                        <span class="shop-link">Shop Now <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="category.html" class="category-card">
+                    <div class="category-image">
+                        <img src="images/category-4.jpg" alt="Category 4">
+                    </div>
+                    <div class="category-content">
+                        <h3>Limited Edition</h3>
+                        <span class="shop-link">Shop Now <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section-->
+    <section class="featured-products">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Products</h2>
+                <p class="section-subtitle">Discover our handpicked selection of premium products</p>
+                <div class="product-tabs">
+                    <button class="product-tab active" data-tab="trending">Trending</button>
+                    <button class="product-tab" data-tab="bestsellers">Best Sellers</button>
+                    <button class="product-tab" data-tab="newarrivals">New Arrivals</button>
+                </div>
+            </div>
+
+            <div class="tab-content active" id="trending">
+                <!-- PRODUCT CARD 1 - ADDED data-product-id -->
+                <div class="product-card" data-product-id="product-1">
+                    <div class="product-image">
+                        <div class="product-badges">
+                            <span class="badge new">New</span>
+                            <span class="badge sale">-20%</span>
+                        </div>
+                        <a href="product.html">
+                            <img src="images/product-1.jpg" alt="Product 1" class="primary-image" loading="lazy">
+                            <img src="images/product-1-hover.jpg" alt="Product 1 Hover" class="hover-image" loading="lazy">
+                        </a>
+                        <div class="product-actions">
+                            <button class="action-btn quick-view-btn" aria-label="Quick view">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn wishlist-btn" aria-label="Add to wishlist">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <button class="action-btn compare-btn" aria-label="Compare">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="add-to-cart-wrapper">
+                            <button class="btn btn-dark add-to-cart-btn">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <div class="product-categories">
+                            <a href="category.html">Premium</a>
+                        </div>
+                        <h3 class="product-title"><a href="product.html">Signature Collection Item</a></h3>
+                        <div class="product-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="rating-count">(42)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="old-price">$249.00</span>
+                            <span class="current-price">$199.00</span>
+                        </div>
+                        <div class="color-options">
+                            <span class="color-option" style="background-color: #222;" title="Black"></span>
+                            <span class="color-option" style="background-color: #6e8cd5;" title="Blue"></span>
+                            <span class="color-option" style="background-color: #f56060;" title="Red"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PRODUCT CARD 2 - ADDED data-product-id -->
+                <div class="product-card" data-product-id="product-2">
+                    <div class="product-image">
+                        <a href="product.html">
+                            <img src="images/product-2.jpg" alt="Product 2" class="primary-image">
+                            <img src="images/product-2-hover.jpg" alt="Product 2 Hover" class="hover-image">
+                        </a>
+                        <div class="product-actions">
+                            <button class="action-btn quick-view-btn" aria-label="Quick view">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn wishlist-btn" aria-label="Add to wishlist">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <button class="action-btn compare-btn" aria-label="Compare">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="add-to-cart-wrapper">
+                            <button class="btn btn-dark add-to-cart-btn">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <div class="product-categories">
+                            <a href="category.html">Lifestyle</a>
+                        </div>
+                        <h3 class="product-title"><a href="product.html">Modern Minimalist Piece</a></h3>
+                        <div class="product-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="rating-count">(28)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$179.00</span>
+                        </div>
+                        <div class="color-options">
+                            <span class="color-option" style="background-color: #222;" title="Black"></span>
+                            <span class="color-option" style="background-color: #f5f5f5; border: 1px solid #ddd;" title="White"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PRODUCT CARD 3 - ADDED data-product-id -->
+                <div class="product-card" data-product-id="product-3">
+                    <div class="product-image">
+                        <div class="product-badges">
+                            <span class="badge hot">Hot</span>
+                        </div>
+                        <a href="product.html">
+                            <img src="images/product-3.jpg" alt="Product 3" class="primary-image">
+                            <img src="images/product-3-hover.jpg" alt="Product 3 Hover" class="hover-image">
+                        </a>
+                        <div class="product-actions">
+                            <button class="action-btn quick-view-btn" aria-label="Quick view">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn wishlist-btn" aria-label="Add to wishlist">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <button class="action-btn compare-btn" aria-label="Compare">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="add-to-cart-wrapper">
+                            <button class="btn btn-dark add-to-cart-btn">Add to Cart</button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <div class="product-categories">
+                            <a href="category.html">Limited</a>
+                        </div>
+                        <h3 class="product-title"><a href="product.html">Exclusive Designer Item</a></h3>
+                        <div class="product-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="rating-count">(16)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$299.00</span>
+                        </div>
+                        <div class="color-options">
+                            <span class="color-option" style="background-color: #d4af37;" title="Gold"></span>
+                            <span class="color-option" style="background-color: #6e8cd5;" title="Blue"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PRODUCT CARD 4 - ADDED data-product-id -->
+                <div class="product-card" data-product-id="product-4">
+                    <div class="product-image">
+                        <div class="product-badges">
+                            <span class="badge sold-out">Sold Out</span>
+                        </div>
+                        <a href="product.html">
+                            <img src="images/product-4.jpg" alt="Product 4" class="primary-image">
+                            <img src="images/product-4-hover.jpg" alt="Product 4 Hover" class="hover-image">
+                        </a>
+                        <div class="product-actions">
+                            <button class="action-btn quick-view-btn" aria-label="Quick view">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn wishlist-btn" aria-label="Add to wishlist">
+                                <i class="far fa-heart"></i>
+                            </button>
+                            <button class="action-btn compare-btn" aria-label="Compare">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="add-to-cart-wrapper">
+                            <button class="btn btn-dark add-to-cart-btn" disabled>Sold Out</button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <div class="product-categories">
+                            <a href="category.html">Collection</a>
+                        </div>
+                        <h3 class="product-title"><a href="product.html">Premium Collector's Edition</a></h3>
+                        <div class="product-rating">
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="rating-count">(23)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="current-price">$349.00</span>
+                        </div>
+                        <div class="color-options">
+                            <span class="color-option" style="background-color: #222;" title="Black"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="bestsellers">
+                <!-- Best Sellers content will be loaded dynamically -->
+            </div>
+            
+            <div class="tab-content" id="newarrivals">
+                <!-- New Arrivals content will be loaded dynamically -->
+            </div>
+            
+            <div class="view-all-container">
+                <a href="shop.html" class="btn btn-outline btn-lg">View All Products</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Banner Section -->
+    <section class="feature-banner full-width">
+        <div class="feature-banner-wrapper">
+            <div class="feature-banner-content">
+                <div class="container">
+                    <div class="row">
+                        <div class="feature-text">
+                            <h4 class="subtitle">Limited Time Offer</h4>
+                            <h2 class="title">Special Edition Collection</h2>
+                            <p class="description">Our most exclusive items, crafted with premium materials and exceptional attention to detail.</p>
+                            <div class="countdown-timer" data-end="2025-08-31T23:59:59">
+                                <div class="countdown-item">
+                                    <span class="countdown-value days">00</span>
+                                    <span class="countdown-label">Days</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-value hours">00</span>
+                                    <span class="countdown-label">Hours</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-value minutes">00</span>
+                                    <span class="countdown-label">Minutes</span>
+                                </div>
+                                <div class="countdown-item">
+                                    <span class="countdown-value seconds">00</span>
+                                    <span class="countdown-label">Seconds</span>
+                                </div>
+                            </div>
+                            <a href="collection.html" class="btn btn-light">Explore Collection</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-banner-image">
+                <picture>
+                    <source media="(max-width: 767px)" srcset="images/banner-mobile.jpg">
+                    <img src="images/banner.jpg" alt="Special Edition Collection">
+                </picture>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Arrivals Section -->
+    <section class="new-arrivals">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">New Arrivals</h2>
+                <p class="section-subtitle">The latest additions to our collection</p>
+                <a href="shop.html" class="btn btn-dark btn-sm">View All</a>
+            </div>
+            <div class="products-slider">
+                <div class="products-slider-wrapper">
+                    <!-- PRODUCT SLIDE 1 - ADDED data-product-id -->
+                    <div class="product-slide">
+                        <div class="product-card" data-product-id="product-5">
+                            <div class="product-image">
+                                <div class="product-badges">
+                                    <span class="badge new">New</span>
+                                </div>
+                                <a href="product.html">
+                                    <img src="images/product-5.jpg" alt="Product 5" class="primary-image">
+                                    <img src="images/product-5-hover.jpg" alt="Product 5 Hover" class="hover-image">
+                                </a>
+                                <div class="product-actions">
+                                    <button class="action-btn quick-view-btn" aria-label="Quick view">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn wishlist-btn" aria-label="Add to wishlist">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn compare-btn" aria-label="Compare">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="add-to-cart-wrapper">
+                                    <button class="btn btn-dark add-to-cart-btn">Add to Cart</button>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="product-categories">
+                                    <a href="category.html">New Season</a>
+                                </div>
+                                <h3 class="product-title"><a href="product.html">Contemporary Classic</a></h3>
+                                <div class="product-price">
+                                    <span class="current-price">$189.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PRODUCT SLIDE 2 - ADDED data-product-id -->
+                    <div class="product-slide">
+                        <div class="product-card" data-product-id="product-6">
+                            <div class="product-image">
+                                <div class="product-badges">
+                                    <span class="badge new">New</span>
+                                </div>
+                                <a href="product.html">
+                                    <img src="images/product-6.jpg" alt="Product 6" class="primary-image">
+                                    <img src="images/product-6-hover.jpg" alt="Product 6 Hover" class="hover-image">
+                                </a>
+                                <div class="product-actions">
+                                    <button class="action-btn quick-view-btn" aria-label="Quick view">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn wishlist-btn" aria-label="Add to wishlist">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn compare-btn" aria-label="Compare">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="add-to-cart-wrapper">
+                                    <button class="btn btn-dark add-to-cart-btn">Add to Cart</button>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="product-categories">
+                                    <a href="category.html">Limited Edition</a>
+                                </div>
+                                <h3 class="product-title"><a href="product.html">Premium Showcase Item</a></h3>
+                                <div class="product-price">
+                                    <span class="current-price">$229.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PRODUCT SLIDE 3 - ADDED data-product-id -->
+                    <div class="product-slide">
+                        <div class="product-card" data-product-id="product-7">
+                            <div class="product-image">
+                                <div class="product-badges">
+                                    <span class="badge new">New</span>
+                                </div>
+                                <a href="product.html">
+                                    <img src="images/product-7.jpg" alt="Product 7" class="primary-image">
+                                    <img src="images/product-7-hover.jpg" alt="Product 7 Hover" class="hover-image">
+                                </a>
+                                <div class="product-actions">
+                                    <button class="action-btn quick-view-btn" aria-label="Quick view">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn wishlist-btn" aria-label="Add to wishlist">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn compare-btn" aria-label="Compare">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="add-to-cart-wrapper">
+                                    <button class="btn btn-dark add-to-cart-btn">Add to Cart</button>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="product-categories">
+                                    <a href="category.html">Essentials</a>
+                                </div>
+                                <h3 class="product-title"><a href="product.html">Signature Design Piece</a></h3>
+                                <div class="product-price">
+                                    <span class="current-price">$159.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PRODUCT SLIDE 4 - ADDED data-product-id -->
+                    <div class="product-slide">
+                        <div class="product-card" data-product-id="product-8">
+                            <div class="product-image">
+                                <div class="product-badges">
+                                    <span class="badge new">New</span>
+                                </div>
+                                <a href="product.html">
+                                    <img src="images/product-8.jpg" alt="Product 8" class="primary-image">
+                                    <img src="images/product-8-hover.jpg" alt="Product 8 Hover" class="hover-image">
+                                </a>
+                                <div class="product-actions">
+                                    <button class="action-btn quick-view-btn" aria-label="Quick view">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn wishlist-btn" aria-label="Add to wishlist">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn compare-btn" aria-label="Compare">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="add-to-cart-wrapper">
+                                    <button class="btn btn-dark add-to-cart-btn">Add to Cart</button>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="product-categories">
+                                    <a href="category.html">Premium</a>
+                                </div>
+                                <h3 class="product-title"><a href="product.html">Luxury Collection Item</a></h3>
+                                <div class="product-price">
+                                    <span class="current-price">$279.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- PRODUCT SLIDE 5 - ADDED data-product-id -->
+                    <div class="product-slide">
+                        <div class="product-card" data-product-id="product-9">
+                            <div class="product-image">
+                                <div class="product-badges">
+                                    <span class="badge new">New</span>
+                                </div>
+                                <a href="product.html">
+                                    <img src="images/product-9.jpg" alt="Product 9" class="primary-image">
+                                    <img src="images/product-9-hover.jpg" alt="Product 9 Hover" class="hover-image">
+                                </a>
+                                <div class="product-actions">
+                                    <button class="action-btn quick-view-btn" aria-label="Quick view">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn wishlist-btn" aria-label="Add to wishlist">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                    <button class="action-btn compare-btn" aria-label="Compare">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                                <div class="add-to-cart-wrapper">
+                                    <button class="btn btn-dark add-to-cart-btn">Add to Cart</button>
+                                </div>
+                            </div>
+                            <div class="product-content">
+                                <div class="product-categories">
+                                    <a href="category.html">Trending</a>
+                                </div>
+                                <h3 class="product-title"><a href="product.html">Designer Selection</a></h3>
+                                <div class="product-price">
+                                    <span class="current-price">$199.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-prev" aria-label="Previous slide"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-next" aria-label="Next slide"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Brand Story Section -->
+    <section class="brand-story">
+        <div class="container">
+            <div class="brand-story-content">
+                <div class="brand-story-text">
+                    <h4 class="subtitle">Our Story</h4>
+                    <h2 class="section-title">The Bingo Experience</h2>
+                    <p class="description">At Bingo, we believe in creating exceptional products that elevate everyday experiences. Our journey began with a passion for quality craftsmanship and timeless design.</p>
+                    <p class="description">Every Bingo product represents our commitment to premium materials, ethical production, and attention to detail. We carefully select each element to ensure our products not only look beautiful but are built to last.</p>
+                    <div class="brand-values">
+                        <div class="brand-value">
+                            <div class="value-icon">
+                                <i class="fas fa-gem"></i>
+                            </div>
+                            <h3>Premium Quality</h3>
+                            <p>We use only the finest materials sourced from ethical suppliers around the world.</p>
+                        </div>
+                        <div class="brand-value">
+                            <div class="value-icon">
+                                <i class="fas fa-medal"></i>
+                            </div>
+                            <h3>Craftsmanship</h3>
+                            <p>Every item is carefully crafted by skilled artisans with years of experience.</p>
+                        </div>
+                        <div class="brand-value">
+                            <div class="value-icon">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <h3>Sustainability</h3>
+                            <p>We're committed to responsible production and minimizing our environmental impact.</p>
+                        </div>
+                    </div>
+                    <a href="about.html" class="btn btn-dark">Discover Our Story</a>
+                </div>
+                <div class="brand-story-image">
+                    <img src="images/brand-story.jpg" alt="Bingo Brand Story">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instagram Feed Section -->
+    <section class="instagram-feed full-width">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Follow Us on Instagram</h2>
+                <p class="section-subtitle">@bingo_official</p>
+            </div>
+        </div>
+        <div class="instagram-grid">
+            <a href="#" class="instagram-item" target="_blank" rel="noopener">
+                <img src="images/instagram-1.jpg" alt="Instagram Post 1">
+                <div class="instagram-overlay">
+                    <i class="fab fa-instagram"></i>
+                </div>
+            </a>
+            <a href="#" class="instagram-item" target="_blank" rel="noopener">
+                <img src="images/instagram-2.jpg" alt="Instagram Post 2">
+                <div class="instagram-overlay">
+                    <i class="fab fa-instagram"></i>
+                </div>
+            </a>
+            <a href="#" class="instagram-item" target="_blank" rel="noopener">
+                <img src="images/instagram-3.jpg" alt="Instagram Post 3">
+                <div class="instagram-overlay">
+                    <i class="fab fa-instagram"></i>
+                </div>
+            </a>
+            <a href="#" class="instagram-item" target="_blank" rel="noopener">
+                <img src="images/instagram-4.jpg" alt="Instagram Post 4">
+                <div class="instagram-overlay">
+                    <i class="fab fa-instagram"></i>
+                </div>
+            </a>
+            <a href="#" class="instagram-item" target="_blank" rel="noopener">
+                <img src="images/instagram-5.jpg" alt="Instagram Post 5">
+                <div class="instagram-overlay">
+                    <i class="fab fa-instagram"></i>
+                </div>
+            </a>
+            <a href="#" class="instagram-item" target="_blank" rel="noopener">
+                <img src="images/instagram-6.jpg" alt="Instagram Post 6">
+                <div class="instagram-overlay">
+                    <i class="fab fa-instagram"></i>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <div class="newsletter-text">
+                    <h2 class="section-title">Subscribe to Our Newsletter</h2>
+                    <p class="description">Sign up for our newsletter to receive exclusive offers, new product announcements, and styling inspiration.</p>
+                </div>
+                <form class="newsletter-form">
+                    <div class="form-group">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit" class="btn btn-dark">Subscribe</button>
+                    </div>
+                    <div class="form-privacy">
+                        <label class="checkbox-container">
+                            <input type="checkbox" required>
+                            <span class="checkmark"></span>
+                            <span class="privacy-text">I agree to receive promotional emails and accept the <a href="privacy.html">Privacy Policy</a></span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-widgets">
+                    <div class="footer-widget about-widget">
+                        <div class="footer-logo">
+                            <h1>BINGO</h1>
+                        </div>
+                        <p class="about-text">Bingo is a premium lifestyle brand dedicated to creating exceptional products for discerning customers who value quality and sophistication.</p>
+                        <div class="social-icons">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="#" aria-label="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+                            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-widget">
+                        <h3 class="widget-title">Shop</h3>
+                        <ul class="widget-list">
+                            <li><a href="category.html">New Arrivals</a></li>
+                            <li><a href="category.html">Best Sellers</a></li>
+                            <li><a href="category.html">Limited Edition</a></li>
+                            <li><a href="category.html">Sale</a></li>
+                            <li><a href="category.html">Coming Soon</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-widget">
+                        <h3 class="widget-title">Information</h3>
+                        <ul class="widget-list">
+                            <li><a href="about.html">About Us</a></li>
+                            <li><a href="blog.html">Our Blog</a></li>
+                            <li><a href="contact.html">Contact Us</a></li>
+                            <li><a href="careers.html">Careers</a></li>
+                            <li><a href="stores.html">Store Locator</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-widget">
+                        <h3 class="widget-title">Customer Service</h3>
+                        <ul class="widget-list">
+                            <li><a href="faq.html">FAQs</a></li>
+                            <li><a href="shipping.html">Shipping & Returns</a></li>
+                            <li><a href="warranty.html">Warranty & Repairs</a></li>
+                            <li><a href="size-guide.html">Size Guide</a></li>
+                            <li><a href="contact.html">Contact Support</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-widget contact-widget">
+                        <h3 class="widget-title">Contact</h3>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div class="contact-text">
+                                    <p>123 Fashion Avenue, Suite 500<br>Los Angeles, CA 90210</p>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="contact-text">
+                                    <p>+1 (800) 123-4567<br>Mon-Fri: 9am - 6pm PST</p>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="contact-text">
+                                    <p>info@bingoshop.com<br>support@bingoshop.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-middle">
+            <div class="container">
+                <div class="footer-features">
+                    <div class="footer-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Free Shipping</h4>
+                            <p>On all orders over $75</p>
+                        </div>
+                    </div>
+                    <div class="footer-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-undo"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Easy Returns</h4>
+                            <p>30-day return policy</p>
+                        </div>
+                    </div>
+                    <div class="footer-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Secure Payments</h4>
+                            <p>100% secure checkout</p>
+                        </div>
+                    </div>
+                    <div class="footer-feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Dedicated Support</h4>
+                            <p>24/7 customer service</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="footer-bottom-content">
+                    <div class="copyright">
+                        <p>&copy; 2025 BINGO. All rights reserved.</p>
+                    </div>
+                    <div class="footer-links">
+                        <ul>
+                            <li><a href="terms.html">Terms of Service</a></li>
+                            <li><a href="privacy.html">Privacy Policy</a></li>
+                            <li><a href="cookies.html">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                    <div class="payment-methods">
+                        <img src="images/payment-methods.png" alt="Payment Methods">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+// Update navigation menus when categories change
+document.addEventListener('categoriesUpdated', function() {
+    updateNavigationMenus();
+});
+
+function updateNavigationMenus() {
+    console.log('[DEBUG] index.html: Starting navigation menu update...');
+    
+    if (!window.CATEGORIES) {
+        console.warn('[DEBUG] index.html: CATEGORIES not available for navigation update');
+        return;
+    }
+    
+    try {
+        // Get active categories for navigation
+        const activeCategories = window.CATEGORIES.getActiveCategories ? 
+            window.CATEGORIES.getActiveCategories() : [];
+        
+        console.log('[DEBUG] index.html: Found', activeCategories.length, 'active categories');
+        
+        // Update mega menu categories
+        const megaMenuCategories = document.querySelector('.mega-menu-column:first-child ul');
+        if (megaMenuCategories && activeCategories.length > 0) {
+            let html = '';
+            activeCategories.slice(0, 4).forEach(category => {
+                html += `<li><a href="category.html?id=${category.id}">${category.name}</a></li>`;
+            });
+            megaMenuCategories.innerHTML = html;
+            console.log('[DEBUG] index.html: Updated mega menu');
+        }
+        
+        // Update category cards on homepage
+        const categoryGrid = document.querySelector('.categories-grid');
+        if (categoryGrid && activeCategories.length > 0) {
+            let html = '';
+            activeCategories.slice(0, 4).forEach(category => {
+                const imageUrl = category.image || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop&crop=center';
+                html += `
+                    <a href="category.html?id=${category.id}" class="category-card">
+                        <div class="category-image">
+                            <img src="${imageUrl}" alt="${category.name}" loading="lazy">
+                        </div>
+                        <div class="category-content">
+                            <h3>${category.name}</h3>
+                            <span class="shop-link">Shop Now <i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </a>
+                `;
+            });
+            categoryGrid.innerHTML = html;
+            console.log('[DEBUG] index.html: Updated category grid');
+        }
+        
+        // Update mobile menu categories
+        const mobileSubmenu = document.querySelector('.mobile-submenu');
+        if (mobileSubmenu && activeCategories.length > 0) {
+            let html = '';
+            activeCategories.forEach(category => {
+                html += `<li><a href="category.html?id=${category.id}">${category.name}</a></li>`;
+            });
+            mobileSubmenu.innerHTML = html;
+            console.log('[DEBUG] index.html: Updated mobile menu');
+        }
+        
+        // Update any existing category links throughout the page
+        updateAllCategoryLinks(activeCategories);
+        
+    } catch (error) {
+        console.error('[DEBUG] index.html: Error updating navigation menus:', error);
+    }
+}
+
+// New function to update all category links
+function updateAllCategoryLinks(categories) {
+    const categoryMap = {};
+    categories.forEach(cat => {
+        categoryMap[cat.name.toLowerCase()] = cat.id;
+        categoryMap[cat.slug] = cat.id;
+    });
+    
+    // Update all links that might be category links
+    document.querySelectorAll('a[href*="category"]').forEach(link => {
+        const href = link.getAttribute('href');
+        const linkText = link.textContent.trim().toLowerCase();
+        
+        // Skip if already has proper category.html?id= format
+        if (href.includes('category.html?id=')) return;
+        
+        // Try to match link text to category
+        if (categoryMap[linkText]) {
+            link.setAttribute('href', `category.html?id=${categoryMap[linkText]}`);
+        }
+    });
+}
+
+// Initialize navigation update when page loads
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(updateNavigationMenus, 2000);
+    });
+} else {
+    setTimeout(updateNavigationMenus, 2000);
+}
+</script>
+<script>
+// Enhanced cross-tab category update detection
+window.addEventListener('storage', function(e) {
+    if (e.key === 'bingo_categories_data' || e.key === 'categories_updated_flag') {
+        console.log('[DEBUG] index.html: Categories storage changed, updating navigation...');
+        
+        // Reload CATEGORIES data
+        if (window.CATEGORIES && window.CATEGORIES.loadCategories) {
+            window.CATEGORIES.loadCategories().then(() => {
+                updateNavigationMenus();
+                
+                // Also update CategoryManager if it exists
+                if (window.CategoryManager && window.CategoryManager.updateSiteNavigation) {
+                    window.CategoryManager.updateSiteNavigation();
+                }
+            });
+        } else {
+            // Fallback - just update navigation with current data
+            setTimeout(updateNavigationMenus, 500);
+        }
+    }
+});
+
+// Listen for direct category update events
+document.addEventListener('categoriesUpdated', function(e) {
+    console.log('[DEBUG] index.html: Categories updated event received');
+    updateNavigationMenus();
+});
+
+document.addEventListener('adminCategoriesUpdated', function(e) {
+    console.log('[DEBUG] index.html: Admin categories updated event received');
+    updateNavigationMenus();
+});
+</script>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Quick View Modal -->
+    <div id="quick-view-modal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal"><i class="fas fa-times"></i></button>
+            <div class="quick-view-content">
+                <!-- Quick view content will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Scripts with correct order -->
+    <!-- Scripts with correct loading order -->
+    <script src="js/auth-manager.js"></script>  
+    <script src="js/category-data.js"></script>
+     <script src="js/products-data.js"></script>
+
+    <!-- Auth manager first -->
+    <script src="js/product-renderer.js"></script>
+    <script src="js/cart-manager.js"></script>
+    <script src="js/wishlist-manager.js"></script> 
+    <script src="js/shop-manager.js"></script>  
+    <script src="js/category.js"></script>      
+    <script src="js/search-manager.js"></script> 
+    <script src="js/account-manager.js"></script>  
+    <script src="js/collection-manager.js"></script> 
+    
+
+ 
+ 
+
+    <script src="js/main.js"></script>             <!-- Main.js loads last -->
+    <!-- Removed cart-diagnostic.js after fixes are implemented -->
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Testing Tools Demo</title>
+    <link rel="stylesheet" href="css/testing-tools.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #333;
+        }
+        
+        h2 {
+            color: #2196F3;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 5px;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-green {
+            background-color: #4CAF50;
+        }
+        
+        .btn-red {
+            background-color: #f44336;
+        }
+        
+        form {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            padding: 10px 15px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        hr {
+            margin: 30px 0;
+            border: 0;
+            border-top: 1px solid #ddd;
+        }
+        
+        .test-info {
+            background-color: #e3f2fd;
+            padding: 10px;
+            border-left: 4px solid #2196F3;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Website Testing Tools Demo</h1>
+    <p>This page demonstrates the Form Validator and Link Checker tools.</p>
+    
+    <div class="test-info">
+        <p><strong>Note:</strong> This page is designed to test both our form validation and link checking tools. 
+        Click the buttons below to activate the testing tools.</p>
+    </div>
+    
+    <div class="section">
+        <h2>1. Form Validation</h2>
+        <p>Test the form validator with these forms:</p>
+        
+        <button class="btn" onclick="runFormValidator()">Test All Forms</button>
+        <button class="btn btn-green" onclick="runFormValidator({testData: true})">Test With Sample Data</button>
+        <button class="btn" onclick="window.location.href = window.location.pathname + '?test=forms'">Auto Test Mode</button>
+        
+        <form id="contact-form">
+            <h3>Contact Form</h3>
+            <label for="name">Name*</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">Email*</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" pattern="[0-9]{10,}" title="Please enter at least 10 digits">
+            
+            <label for="subject">Subject</label>
+            <select id="subject" name="subject">
+                <option value="">-- Select a subject --</option>
+                <option value="general">General Inquiry</option>
+                <option value="support">Customer Support</option>
+                <option value="feedback">Feedback</option>
+            </select>
+            
+            <label for="message">Message*</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+            
+            <label>
+                <input type="checkbox" name="terms" required>
+                I agree to the terms and conditions*
+            </label>
+            
+            <button type="submit">Send Message</button>
+        </form>
+        
+        <form id="newsletter-form">
+            <h3>Newsletter Signup</h3>
+            <label for="subscribe-email">Email*</label>
+            <input type="email" id="subscribe-email" name="email" required>
+            
+            <label>Interests (optional)</label>
+            <label>
+                <input type="checkbox" name="interest" value="products"> Products
+            </label>
+            <label>
+                <input type="checkbox" name="interest" value="blog"> Blog Posts
+            </label>
+            <label>
+                <input type="checkbox" name="interest" value="promotions"> Promotions
+            </label>
+            
+            <button type="submit">Subscribe</button>
+        </form>
+    </div>
+    
+    <hr>
+    
+    <div class="section">
+        <h2>2. Link Checker</h2>
+        <p>Test the link checker with these links:</p>
+        
+        <button class="btn" onclick="runLinkChecker()">Check All Links</button>
+        <button class="btn" onclick="runLinkChecker({checkExternalLinks: true})">Include External Links</button>
+        <button class="btn" onclick="window.location.href = window.location.pathname + '?test=links'">Auto Test Mode</button>
+        
+        <h3>Internal Links</h3>
+        <ul>
+            <li><a href="index.html">Home Page</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="non-existent-page.html">Broken Link</a></li>
+            <li><a href="#">Empty Link</a></li>
+            <li><a href="javascript:void(0)">JavaScript Link</a></li>
+        </ul>
+        
+        <h3>External Links</h3>
+        <ul>
+            <li><a href="https://www.google.com">Google</a></li>
+            <li><a href="https://www.example.com">Example.com</a></li>
+            <li><a href="https://this-domain-definitely-does-not-exist-123456789.com">Broken External Link</a></li>
+            <li><a href="mailto:info@example.com">Email Link</a></li>
+            <li><a href="tel:+1234567890">Phone Link</a></li>
+        </ul>
+    </div>
+    
+    <!-- Load the testing scripts -->
+    <script src="scripts/form-validator.js"></script>
+    <script src="scripts/link-checker.js"></script>
+    
+    <script>
+        // Handle form submissions to prevent page reload in this demo
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                if (!window.location.search.includes('test=')) {
+                    // Only prevent default if not in test mode
+                    e.preventDefault();
+                    alert('Form submission prevented for demo purposes');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

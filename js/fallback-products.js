@@ -1,0 +1,290 @@
+/**
+ * BINGO E-commerce Fallback Products
+ * Provides sample product data when API is unavailable
+ */
+
+window.FALLBACK_PRODUCTS = {
+  products: [
+    // Trending Products (4 items)
+    {
+      id: 'product-1',
+      name: "Signature Collection Item",
+      price: 199.00,
+      old_price: 249.00,
+      image_url: "images/product-1.jpg",
+      images: {
+        primary: "images/product-1.jpg",
+        gallery: ["images/product-1-hover.jpg", "images/product-1-alt-1.jpg"]
+      },
+      category: "premium",
+      categories: ["premium", "signature"],
+      description: "Signature Collection Item",
+      trending: true,
+      bestseller: false,
+      newArrival: false,
+      in_stock: true,
+      stock: 25,
+      rating: 4.5,
+      review_count: 42
+    },
+    {
+      id: 'product-2',
+      name: "Modern Minimalist Piece",
+      price: 179.00,
+      image_url: "images/product-2.jpg",
+      images: {
+        primary: "images/product-2.jpg",
+        gallery: ["images/product-2-hover.jpg"]
+      },
+      category: "lifestyle",
+      categories: ["lifestyle", "modern"],
+      description: "Modern Minimalist Piece",
+      trending: true,
+      bestseller: false,
+      newArrival: false,
+      in_stock: true,
+      stock: 15,
+      rating: 5.0,
+      review_count: 28
+    },
+    {
+      id: 'product-3',
+      name: "Exclusive Designer Item",
+      price: 349.00,
+      image_url: "images/product-3.jpg",
+      images: {
+        primary: "images/product-3.jpg",
+        gallery: ["images/product-3-hover.jpg"]
+      },
+      category: "limited",
+      categories: ["limited", "designer"],
+      description: "Exclusive Designer Item",
+      trending: true,
+      bestseller: false,
+      newArrival: false,
+      in_stock: true,
+      stock: 10,
+      rating: 4.7,
+      review_count: 23
+    },
+    {
+      id: 'product-4',
+      name: "Urban Style Essential",
+      price: 129.00,
+      image_url: "images/product-1.jpg",
+      images: {
+        primary: "images/product-1.jpg",
+        gallery: ["images/product-1-hover.jpg"]
+      },
+      category: "lifestyle",
+      categories: ["lifestyle", "urban"],
+      description: "Urban Style Essential",
+      trending: true,
+      bestseller: false,
+      newArrival: false,
+      in_stock: true,
+      stock: 30,
+      rating: 4.4,
+      review_count: 65
+    },
+
+    // Best Sellers (4 items)
+    {
+      id: 'product-5',
+      name: "Premium Collector's Edition",
+      price: 299.00,
+      image_url: "images/product-2.jpg",
+      images: {
+        primary: "images/product-2.jpg",
+        gallery: ["images/product-2-hover.jpg"]
+      },
+      category: "collection",
+      categories: ["collection", "premium"],
+      description: "Premium Collector's Edition",
+      trending: false,
+      bestseller: true,
+      newArrival: false,
+      in_stock: true,
+      stock: 8,
+      rating: 4.8,
+      review_count: 142
+    },
+    {
+      id: 'product-6',
+      name: "Classic Heritage Design",
+      price: 249.00,
+      image_url: "images/product-3.jpg",
+      images: {
+        primary: "images/product-3.jpg",
+        gallery: ["images/product-3-hover.jpg"]
+      },
+      category: "premium",
+      categories: ["premium", "heritage"],
+      description: "Classic Heritage Design",
+      trending: false,
+      bestseller: true,
+      newArrival: false,
+      in_stock: true,
+      stock: 12,
+      rating: 4.9,
+      review_count: 98
+    },
+    {
+      id: 'product-7',
+      name: "Bestselling Lifestyle Item",
+      price: 149.00,
+      image_url: "images/product-1.jpg",
+      images: {
+        primary: "images/product-1.jpg",
+        gallery: ["images/product-1-hover.jpg"]
+      },
+      category: "lifestyle",
+      categories: ["lifestyle", "popular"],
+      description: "Bestselling Lifestyle Item",
+      trending: false,
+      bestseller: true,
+      newArrival: false,
+      in_stock: true,
+      stock: 45,
+      rating: 4.6,
+      review_count: 203
+    },
+    {
+      id: 'product-8',
+      name: "Top-Rated Essential",
+      price: 89.00,
+      image_url: "images/product-2.jpg",
+      images: {
+        primary: "images/product-2.jpg",
+        gallery: ["images/product-2-hover.jpg"]
+      },
+      category: "essentials",
+      categories: ["essentials", "top-rated"],
+      description: "Top-Rated Essential",
+      trending: false,
+      bestseller: true,
+      newArrival: false,
+      in_stock: true,
+      stock: 67,
+      rating: 4.7,
+      review_count: 156
+    },
+
+    // New Arrivals (4 items)
+    {
+      id: 'product-9',
+      name: "Fresh Summer Collection",
+      price: 189.00,
+      image_url: "images/product-3.jpg",
+      images: {
+        primary: "images/product-3.jpg",
+        gallery: ["images/product-3-hover.jpg"]
+      },
+      category: "collection",
+      categories: ["collection", "summer"],
+      description: "Fresh Summer Collection",
+      trending: false,
+      bestseller: false,
+      newArrival: true,
+      in_stock: true,
+      stock: 20,
+      rating: 4.3,
+      review_count: 15
+    },
+    {
+      id: 'product-10',
+      name: "Latest Design Innovation",
+      price: 229.00,
+      image_url: "images/product-1.jpg",
+      images: {
+        primary: "images/product-1.jpg",
+        gallery: ["images/product-1-hover.jpg"]
+      },
+      category: "premium",
+      categories: ["premium", "innovative"],
+      description: "Latest Design Innovation",
+      trending: false,
+      bestseller: false,
+      newArrival: true,
+      in_stock: true,
+      stock: 18,
+      rating: 4.2,
+      review_count: 8
+    },
+    {
+      id: 'product-11',
+      name: "Contemporary Classic",
+      price: 159.00,
+      image_url: "images/product-2.jpg",
+      images: {
+        primary: "images/product-2.jpg",
+        gallery: ["images/product-2-hover.jpg"]
+      },
+      category: "lifestyle",
+      categories: ["lifestyle", "classic"],
+      description: "Contemporary Classic",
+      trending: false,
+      bestseller: false,
+      newArrival: true,
+      in_stock: true,
+      stock: 25,
+      rating: 4.5,
+      review_count: 12
+    },
+    {
+      id: 'product-12',
+      name: "New Season Essential",
+      price: 119.00,
+      image_url: "images/product-3.jpg",
+      images: {
+        primary: "images/product-3.jpg",
+        gallery: ["images/product-3-hover.jpg"]
+      },
+      category: "essentials",
+      categories: ["essentials", "new-season"],
+      description: "New Season Essential",
+      trending: false,
+      bestseller: false,
+      newArrival: true,
+      in_stock: true,
+      stock: 35,
+      rating: 4.1,
+      review_count: 6
+    }
+  ],
+
+  getProducts: function(options = {}) {
+    let products = [...this.products];
+    
+    if (options.trending) {
+      products = products.filter(p => p.trending);
+    }
+    
+    if (options.best_seller || options.bestseller) {
+      products = products.filter(p => p.bestseller);
+    }
+    
+    if (options.new_arrival || options.newArrival) {
+      products = products.filter(p => p.newArrival);
+    }
+    
+    if (options.category) {
+      products = products.filter(p => 
+        p.category === options.category || 
+        (p.categories && p.categories.includes(options.category))
+      );
+    }
+    
+    if (options.limit) {
+      products = products.slice(0, parseInt(options.limit));
+    }
+    
+    return products;
+  },
+
+  getProductById: function(id) {
+    return this.products.find(p => p.id === id || p.id == id);
+  }
+};
+
+console.log('[DEBUG] fallback-products.js: Fallback products loaded');

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab Test | BINGO</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/notification.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { padding: 40px; }
+        .test-container { max-width: 1200px; margin: 0 auto; }
+        .debug-info { 
+            background: #f0f0f0; 
+            padding: 15px; 
+            margin: 20px 0; 
+            border-radius: 5px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Featured Products Tab Test</h1>
+        
+        <div class="debug-info">
+            <h3>Debug Information:</h3>
+            <div id="debug-output">Loading...</div>
+        </div>
+        
+        <!-- Featured Products Section (copied from index.html) -->
+        <section class="featured-products">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">Featured Products</h2>
+                    <p class="section-subtitle">Discover our handpicked selection of premium products</p>
+                    <div class="product-tabs">
+                        <button class="product-tab active" data-tab="trending">Trending</button>
+                        <button class="product-tab" data-tab="bestsellers">Best Sellers</button>
+                        <button class="product-tab" data-tab="newarrivals">New Arrivals</button>
+                    </div>
+                </div>
+
+                <div class="tab-content active" id="trending">
+                    <div class="product-card" data-product-id="product-1">
+                        <div class="product-content">
+                            <h3 class="product-title">Trending Product 1</h3>
+                            <div class="product-price">
+                                <span class="current-price">$199.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="bestsellers">
+                    <div class="product-card" data-product-id="bestseller-1">
+                        <div class="product-content">
+                            <h3 class="product-title">Best Seller Product 1</h3>
+                            <div class="product-price">
+                                <span class="current-price">$149.99</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="newarrivals">
+                    <div class="product-card" data-product-id="newarrival-1">
+                        <div class="product-content">
+                            <h3 class="product-title">New Arrival Product 1</h3>
+                            <div class="product-price">
+                                <span class="current-price">$29.99</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Scripts -->
+    <script>
+        // Debug information
+        document.addEventListener('DOMContentLoaded', function() {
+            const debugOutput = document.getElementById('debug-output');
+            
+            function updateDebugInfo() {
+                let info = '';
+                info += 'Current Active Tab: ' + document.querySelector('.product-tab.active')?.getAttribute('data-tab') + '<br>';
+                info += 'Active Tab Content: ' + document.querySelector('.tab-content.active')?.id + '<br>';
+                info += 'Total Tabs: ' + document.querySelectorAll('.product-tab').length + '<br>';
+                info += 'Total Tab Contents: ' + document.querySelectorAll('.tab-content').length + '<br>';
+                debugOutput.innerHTML = info;
+            }
+            
+            updateDebugInfo();
+            
+            // Add click listeners to tabs
+            const tabs = document.querySelectorAll('.product-tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    console.log('Tab clicked:', this.getAttribute('data-tab'));
+                    
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const tabId = this.getAttribute('data-tab');
+                    tabContents.forEach(content => {
+                        if (content.id === tabId) {
+                            content.classList.add('active');
+                        } else {
+                            content.classList.remove('active');
+                        }
+                    });
+                    
+                    updateDebugInfo();
+                });
+            });
+        });
+    </script>
+</body>
+</html>

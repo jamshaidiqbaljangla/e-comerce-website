@@ -35,7 +35,7 @@ window.ShopManager = {
                 min: 0,
                 max: 1000
             },
-            inStock: true,
+            inStock: false,
             onSale: false,
             newArrival: false
         },
@@ -55,6 +55,11 @@ window.ShopManager = {
             return;
         }
         
+        // Add debug info
+        console.log('[DEBUG] shop-manager.js: Found shop page, checking PRODUCTS...');
+        console.log('[DEBUG] shop-manager.js: window.PRODUCTS exists:', !!window.PRODUCTS);
+        console.log('[DEBUG] shop-manager.js: API_BASE:', window.API_BASE);
+        
         await this.setupProducts();
         this.setupCategories();
         this.setupPriceRange();
@@ -69,9 +74,26 @@ window.ShopManager = {
     setupProducts: async function() {
         console.log('[DEBUG] shop-manager.js: Loading products from API...');
         
+        // Wait for window.PRODUCTS to be available
+        let attempts = 0;
+        while (!window.PRODUCTS && attempts < 10) {
+            console.log('[DEBUG] shop-manager.js: Waiting for window.PRODUCTS to be available...');
+            await new Promise(resolve => setTimeout(resolve, 100));
+            attempts++;
+        }
+        
+        if (!window.PRODUCTS) {
+            console.error('[DEBUG] shop-manager.js: window.PRODUCTS not available after waiting');
+            this.createSampleProducts();
+            return;
+        }
+        
         try {
             // Load products using the PRODUCTS API
+            console.log('[DEBUG] shop-manager.js: Calling window.PRODUCTS.loadProducts()...');
             const products = await window.PRODUCTS.loadProducts();
+            console.log('[DEBUG] shop-manager.js: Received products:', products.length, products);
+            
             this.state.filteredProducts = [...products];
             
             // Find maximum price for price range filter
@@ -242,34 +264,56 @@ window.ShopManager = {
      */
     applyFiltersAndSort: function() {
         let filtered = [...this.state.filteredProducts];
+        
+        console.log('[DEBUG] shop-manager.js: Starting with products:', filtered.length);
+        console.log('[DEBUG] shop-manager.js: Sample product structure:', filtered[0]);
 
         // Apply category filters
         if (this.state.filters.categories.length > 0) {
+            const beforeCategory = filtered.length;
             filtered = filtered.filter(product => {
                 return product.categories && product.categories.some(cat => 
                     this.state.filters.categories.includes(cat)
                 );
             });
+            console.log('[DEBUG] shop-manager.js: After category filter:', beforeCategory, '->', filtered.length);
         }
 
         // Apply price range filter
+        const beforePrice = filtered.length;
         filtered = filtered.filter(product => {
             const price = parseFloat(product.price);
             return price >= this.state.filters.priceRange.min && 
                    price <= this.state.filters.priceRange.max;
         });
+        console.log('[DEBUG] shop-manager.js: After price filter:', beforePrice, '->', filtered.length, 'Price range:', this.state.filters.priceRange);
 
         // Apply availability filters
         if (this.state.filters.inStock) {
-            filtered = filtered.filter(product => product.inStock !== false && product.stock > 0);
+            const beforeStock = filtered.length;
+            filtered = filtered.filter(product => {
+                // More lenient stock checking - consider product in stock if:
+                // 1. inStock is not explicitly false, AND
+                // 2. stock is not 0 or undefined (treat missing stock as available)
+                const hasStock = (product.inStock !== false) && (product.stock === undefined || product.stock > 0);
+                if (!hasStock) {
+                    console.log('[DEBUG] shop-manager.js: Filtering out product due to stock:', product.name, 'inStock:', product.inStock, 'stock:', product.stock);
+                }
+                return hasStock;
+            });
+            console.log('[DEBUG] shop-manager.js: After stock filter:', beforeStock, '->', filtered.length);
         }
 
         if (this.state.filters.onSale) {
+            const beforeSale = filtered.length;
             filtered = filtered.filter(product => product.oldPrice || product.onSale);
+            console.log('[DEBUG] shop-manager.js: After sale filter:', beforeSale, '->', filtered.length);
         }
 
         if (this.state.filters.newArrival) {
+            const beforeNew = filtered.length;
             filtered = filtered.filter(product => product.newArrival);
+            console.log('[DEBUG] shop-manager.js: After new arrival filter:', beforeNew, '->', filtered.length);
         }
 
         // Apply search filter
@@ -394,15 +438,45 @@ window.ShopManager = {
      * Create HTML for a product card
      */
     createProductCard: function(product) {
-        const imageUrl = product.images?.main || product.image_url || this.config.defaultImageUrl;
+        // Use ImageUtils for better image handling
+        let imageUrl = product.images?.main || product.image_url || this.config.defaultImageUrl;
+        
+        // Process the image URL using ImageUtils
+        if (window.ImageUtils) {
+            imageUrl = window.ImageUtils.processImageUrl(imageUrl, 'product');
+        } else {
+            // Fallback processing if ImageUtils not available
+            if (!imageUrl || imageUrl === 'null' || imageUrl === '') {
+                imageUrl = this.config.defaultImageUrl;
+            }
+            
+            // Fix base64 data URL issue - if it's base64 data, use placeholder instead
+            if (imageUrl.includes('data:image/') && imageUrl.length > 100) {
+                console.warn('[DEBUG] shop-manager.js: Base64 image detected, using placeholder instead for product:', product.name);
+                imageUrl = this.config.defaultImageUrl;
+            }
+            
+            // Remove leading slash if it's before a data URL
+            if (imageUrl.startsWith('/data:')) {
+                imageUrl = imageUrl.substring(1);
+            }
+            
+            // Ensure proper URL format for regular URLs
+            if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('data:') && !imageUrl.startsWith('/')) {
+                imageUrl = '/' + imageUrl;
+            }
+        }
+        
         const salePrice = product.oldPrice ? product.price : null;
         const originalPrice = product.oldPrice || product.price;
+        
+        console.log('[DEBUG] shop-manager.js: Creating card for product:', product.name, 'with image:', imageUrl);
         
         return `
             <div class="product-card" data-id="${product.id}">
                 <div class="product-image">
                     <img src="${imageUrl}" alt="${product.name}" loading="lazy" 
-                         onerror="this.src='${this.config.defaultImageUrl}'">
+                         onerror="if(!this.dataset.fallbackAttempted){this.dataset.fallbackAttempted='true';this.src='${this.config.defaultImageUrl}';}">
                     ${product.newArrival ? '<span class="badge new">New</span>' : ''}
                     ${product.oldPrice ? '<span class="badge sale">Sale</span>' : ''}
                     ${!product.inStock || product.stock === 0 ? '<span class="badge out-of-stock">Out of Stock</span>' : ''}

@@ -1,0 +1,26 @@
+/* Fixes for mega-menu dropdown styling */
+
+/* Ensure all parts of the mega-menu have the same background */
+.mega-menu {
+    background-color: var(--color-white) !important;
+}
+
+.mega-menu-content {
+    background-color: var(--color-white) !important;
+}
+
+.mega-menu-column {
+    background-color: var(--color-white) !important;
+}
+
+/* Fix for featured collection to ensure it doesn't have transparent background */
+.mega-menu-column.featured-collection {
+    background-color: var(--color-white) !important;
+    position: relative;
+}
+
+/* Make sure the featured collection overlay has proper opacity/transparency */
+.featured-collection-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.2));
+    border-radius: var(--radius-md);
+}

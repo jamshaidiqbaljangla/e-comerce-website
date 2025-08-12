@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collection | BINGO</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/collection.css">
+    <link rel="stylesheet" href="css/notification.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header (You would copy the header from index.html or use a template) -->
+    <div id="header-placeholder"></div>
+
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="container">
+            <h1 id="collection-title">Collection</h1>
+            <div class="breadcrumb">
+                <a href="index.html">Home</a> / <span id="collection-breadcrumb">Collection</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collection Banner -->
+    <section class="collection-banner">
+        <div class="container">
+            <div class="collection-banner-content">
+                <div class="collection-image">
+                    <img src="images/placeholder.jpg" alt="Collection Banner" id="collection-image">
+                </div>
+                <div class="collection-description" id="collection-description">
+                    <h2>Collection Name</h2>
+                    <p>Explore our curated selection of premium products in this collection. Each item is carefully selected to provide exceptional quality and style.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop Content -->
+    <section class="shop-page">
+        <div class="container">
+            <div class="shop-header">
+                <div class="shop-filter-toggle">
+                    <button class="btn btn-sm filter-toggle-btn">
+                        <i class="fas fa-sliders-h"></i> Filters
+                    </button>
+                </div>
+                <div class="shop-results-count">
+                    Showing <span id="results-count">0</span> results
+                </div>
+                <div class="shop-sort">
+                    <select id="sort-by" class="form-control">
+                        <option value="default">Default</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                        <option value="newest">Newest</option>
+                    </select>
+                </div>
+            </div>
+            <div class="shop-body">
+                <div class="shop-sidebar">
+                    <!-- Filters will be loaded here -->
+                </div>
+                <div class="shop-products">
+                    <div class="product-grid" id="collection-product-grid">
+                        <!-- Products will be loaded here by JavaScript -->
+                    </div>
+                    <div class="pagination">
+                        <!-- Pagination will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (You would copy the footer from index.html or use a template) -->
+    <div id="footer-placeholder"></div>
+
+    <div id="notification-container"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/collection.js"></script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Notifications</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <h2>Admin</h2>
+            <ul>
+                <li><a href="admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="admin-products.html"><i class="fas fa-box"></i> Products</a></li>
+                <li><a href="admin-categories.html"><i class="fas fa-sitemap"></i> Categories</a></li>
+                <li><a href="admin-collections.html"><i class="fas fa-layer-group"></i> Collections</a></li>
+                <li><a href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li><a href="admin-customers.html"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="admin-discount.html"><i class="fas fa-tags"></i> Discount</a></li>
+                <li><a href="admin-pages.html"><i class="fas fa-file-alt"></i> Pages</a></li>
+                <li><a href="admin-blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                <li><a href="admin-media.html"><i class="fas fa-photo-video"></i> Media</a></li>
+                <li><a href="admin-settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="admin-user.html"><i class="fas fa-user-cog"></i> Users</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-top">
+                    <h1><i class="fas fa-bell"></i> Notifications</h1>
+                    <a href="admin.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+                </div>
+                <p>Manage system notifications and alerts.</p>
+            </div>
+
+            <div class="notifications-container">
+                <div class="notification-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="unread">Unread</button>
+                    <button class="filter-btn" data-filter="orders">Orders</button>
+                    <button class="filter-btn" data-filter="system">System</button>
+                    <button class="filter-btn" data-filter="users">Users</button>
+                </div>
+
+                <div class="notifications-list">
+                    <div class="notification-item unread" data-type="orders">
+                        <div class="notification-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>New Order Received</h4>
+                            <p>Order #12345 from john.doe@email.com for $125.99</p>
+                            <span class="notification-time">2 minutes ago</span>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="btn-icon" title="Mark as read"><i class="fas fa-check"></i></button>
+                            <button class="btn-icon" title="View order"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="notification-item unread" data-type="users">
+                        <div class="notification-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>New User Registration</h4>
+                            <p>jane.smith@email.com has created a new account</p>
+                            <span class="notification-time">15 minutes ago</span>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="btn-icon" title="Mark as read"><i class="fas fa-check"></i></button>
+                            <button class="btn-icon" title="View user"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="notification-item" data-type="system">
+                        <div class="notification-icon">
+                            <i class="fas fa-server"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>System Backup Completed</h4>
+                            <p>Daily backup completed successfully at 03:00 AM</p>
+                            <span class="notification-time">5 hours ago</span>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="btn-icon" title="View details"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="notification-item" data-type="orders">
+                        <div class="notification-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="notification-content">
+                            <h4>Order Shipped</h4>
+                            <p>Order #12344 has been shipped to customer</p>
+                            <span class="notification-time">1 day ago</span>
+                        </div>
+                        <div class="notification-actions">
+                            <button class="btn-icon" title="View order"><i class="fas fa-eye"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-settings">
+                    <h3>Notification Settings</h3>
+                    <div class="setting-item">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                            Email notifications for new orders
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                            Browser notifications
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                            SMS notifications for urgent alerts
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .notifications-container {
+            padding: 1rem;
+        }
+
+        .notification-filters {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .notification-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .notification-item.unread {
+            border-left: 4px solid #007bff;
+            background: #f8f9ff;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f3f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: #666;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-content h4 {
+            margin: 0 0 0.5rem;
+            color: #333;
+        }
+
+        .notification-content p {
+            margin: 0 0 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f1f3f4;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon:hover {
+            background: #007bff;
+            color: white;
+        }
+
+        .notification-settings {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .setting-item {
+            margin-bottom: 1rem;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/admin-auth.js"></script>
+    <script src="js/admin-notifications.js"></script>
+</body>
+</html>

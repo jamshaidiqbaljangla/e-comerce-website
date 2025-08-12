@@ -1,0 +1,65 @@
+document.addEventListener('DOMContentLoaded', function() {
+    'use strict';
+
+    // 1. IMMEDIATELY force images to be visible
+    document.querySelectorAll('.product-image img').forEach(img => {
+        img.style.opacity = '1';
+        img.style.position = 'absolute';
+        img.style.top = '0';
+        img.style.left = '0';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.style.zIndex = '10';
+    });
+
+    document.querySelectorAll('.product-image').forEach(container => {
+        container.style.backgroundColor = '#f5f5f5';
+        container.style.position = 'relative';
+        container.style.overflow = 'hidden';
+    });
+    
+    // 2. Add a proper CSS fix to override any styles that might hide images
+    const style = document.createElement('style');
+    style.textContent = `
+        .product-image img {
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: absolute !important;
+            z-index: 10 !important;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 3. App initialization (your normal code)
+    const app = {
+        init: function() {
+            this.headerScroll();
+            this.heroSlider();
+            this.productTabs();
+            this.mobileMenu();
+            this.headerDropdowns();
+            this.quickView();
+            this.cartFunctionality();
+            this.productsSlider();
+            this.countdownTimer();
+            this.wishlistToggle();
+            this.backToTop();
+            this.animateOnScroll();
+        },
+        
+        // All your existing functions...
+    };
+
+    // Initialize app
+    app.init();
+    
+    // 4. DELAYED fix - apply again after a delay to ensure images stay visible
+    setTimeout(() => {
+        document.querySelectorAll('.product-image img').forEach(img => {
+            img.style.opacity = '1';
+            img.style.visibility = 'visible';
+            img.style.display = 'block';
+        });
+    }, 100);
+});

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart | BINGO</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/cart.css">
+    <link rel="stylesheet" href="css/notification.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Inline critical CSS to ensure proper display -->
+    <style>
+        .cart-page {
+            padding: 60px 0;
+        }
+        .cart-table .product-thumbnail img {
+            width: 60px !important;
+            height: 60px !important;
+            object-fit: cover !important;
+            border-radius: 4px !important;
+        }
+        .cart-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 30px;
+            border: 1px solid #eee;
+        }
+        .cart-table th, .cart-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .cart-table .product-name {
+            text-align: left;
+            width: 25%;
+        }
+        .cart-totals {
+            max-width: 400px;
+            margin-left: auto;
+            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (Copy from index.html) -->
+    
+    <!-- Page Title -->
+    <section class="page-title">
+        <div class="container">
+            <h1>Shopping Cart</h1>
+            <div class="breadcrumb">
+                <a href="index.html">Home</a> / <span>Cart</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Cart Page Content -->
+    <section class="cart-page">
+        <div class="container">
+            <div class="cart-content">
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th class="product-remove">&nbsp;</th>
+                            <th class="product-thumbnail">&nbsp;</th>
+                            <th class="product-name">Product</th>
+                            <th class="product-price">Price</th>
+                            <th class="product-quantity">Quantity</th>
+                            <th class="product-subtotal">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Cart items will be dynamically added here -->
+                        <!-- This empty placeholder will be replaced by CartManager.updateCartPage() -->
+                    </tbody>
+                </table>
+                
+                <div class="cart-actions">
+                    <div class="coupon">
+                        <input type="text" placeholder="Coupon code">
+                        <button class="btn btn-dark">Apply Coupon</button>
+                    </div>
+                    <button class="btn btn-outline update-cart">Update Cart</button>
+                </div>
+                
+                <div class="cart-totals">
+                    <h3>Cart Totals</h3>
+                    <table>
+                        <tr>
+                            <th>Subtotal</th>
+                            <td class="subtotal-amount">$0.00</td>
+                        </tr>
+                        <tr>
+                            <th>Shipping</th>
+                            <td class="shipping-amount">$0.00</td>
+                        </tr>
+                        <tr class="order-total">
+                            <th>Total</th>
+                            <td class="total-amount">$0.00</td>
+                        </tr>
+                    </table>
+                    <div class="checkout-button-container">
+                        <a href="checkout.html" class="btn btn-dark btn-lg">Proceed to Checkout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer (Copy from index.html) -->
+    
+    <!-- Scripts -->
+    <script src="js/products-data.js"></script>
+    <script src="js/product-renderer.js"></script>
+    <script src="js/cart-manager.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

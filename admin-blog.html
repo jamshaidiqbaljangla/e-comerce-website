@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Management | BINGO Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        /* Enhanced Header with Navigation */
+        .header {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(108, 117, 125, 0.08);
+            border: 1px solid #e9ecef;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        .toolbar {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            border: 1px solid #e9ecef;
+        }
+
+        .toolbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Enhanced Header with Navigation -->
+        <div class="header">
+            <div class="header-top">
+                <div class="back-navigation">
+                    <a href="admin.html" class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back to Dashboard</span>
+                    </a>
+                    <div class="breadcrumb">
+                        <a href="admin.html">Dashboard</a>
+                        <i class="fas fa-chevron-right"></i>
+                        <span>Blog</span>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <a href="index.html" class="btn btn-outline" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        View Store
+                    </a>
+                    <button class="btn btn-outline" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+            <h1><i class="fas fa-blog"></i> Blog Management</h1>
+            <p class="header-subtitle">Create and manage your blog posts</p>
+        </div>
+
+        <!-- Enhanced Toolbar -->
+        <div class="toolbar">
+            <div class="toolbar-content">
+                <div class="toolbar-left">
+                    <button class="btn btn-primary" id="add-post-btn">
+                        <i class="fas fa-plus"></i>
+                        Create Post
+                    </button>
+                </div>
+                <div class="toolbar-right">
+                    <div class="search-section">
+                        <div class="search-bar">
+                            <input type="text" id="search-input" placeholder="Search by Post Title or Author...">
+                            <button id="search-btn"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Blog Posts Table -->
+        <div class="products-table">
+            <div class="table-header">
+                <h3 class="table-title">All Blog Posts</h3>
+                <div class="table-actions">
+                    <button class="btn btn-outline btn-sm" id="refresh-btn">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="select-all"></th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Status</th>
+                        <th>Published Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="posts-tbody">
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <h3>Loading posts...</h3>
+                            <p>Please wait while we fetch your blog posts</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Enhanced Post Modal -->
+    <div class="modal" id="post-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Create Post</h3>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="post-form">
+                    <div class="form-group">
+                        <label for="post-title">Post Title *</label>
+                        <input type="text" id="post-title" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="post-content">Content</label>
+                        <textarea id="post-content" class="form-control" rows="10"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="post-author">Author</label>
+                            <input type="text" id="post-author" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="post-status">Status</label>
+                            <select id="post-status" class="form-control">
+                                <option value="published">Published</option>
+                                <option value="draft">Draft</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" id="cancel-btn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="save-btn">Save Post</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/admin-auth.js"></script>
+    <script src="js/admin-blog.js"></script>
+</body>
+</html>

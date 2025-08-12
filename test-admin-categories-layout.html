@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admin Categories Layout</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .categories-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .categories-grid {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+        }
+        
+        .categories-hierarchy {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #e9ecef;
+            height: fit-content;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #f1f3f4;
+        }
+        
+        td:last-child {
+            width: auto;
+            min-width: 120px;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+        
+        .edit-btn {
+            background: rgba(0, 123, 255, 0.1);
+            color: #007bff;
+            border: 1px solid rgba(0, 123, 255, 0.2);
+        }
+        
+        .delete-btn {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .categories-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .categories-hierarchy {
+                order: 2;
+            }
+            
+            .categories-grid {
+                order: 1;
+                overflow-x: auto;
+            }
+            
+            .action-buttons {
+                gap: 4px;
+            }
+            
+            .action-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 11px;
+            }
+            
+            table {
+                min-width: 600px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .action-buttons {
+                gap: 3px;
+            }
+            
+            .action-btn {
+                width: 26px;
+                height: 26px;
+                font-size: 10px;
+            }
+            
+            table {
+                font-size: 12px;
+                min-width: 500px;
+            }
+            
+            th, td {
+                padding: 8px 4px;
+            }
+            
+            .categories-container {
+                gap: 15px;
+            }
+        }
+        
+        .test-info {
+            background: #e7f3ff;
+            border: 1px solid #b8daff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <h3>Layout Test - Resize your browser window to test responsive behavior</h3>
+        <p>This shows how the categories table and hierarchy will behave on different screen sizes.</p>
+    </div>
+    
+    <div class="categories-container">
+        <div class="categories-grid">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Products</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Electronics</td>
+                        <td>Electronic devices and gadgets</td>
+                        <td>25</td>
+                        <td>Active</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit-btn" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete-btn" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Clothing</td>
+                        <td>Fashion and apparel items</td>
+                        <td>50</td>
+                        <td>Active</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit-btn" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete-btn" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Home & Garden</td>
+                        <td>Home improvement and garden supplies</td>
+                        <td>30</td>
+                        <td>Active</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit-btn" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete-btn" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="categories-hierarchy">
+            <h3>Category Hierarchy</h3>
+            <div style="padding: 20px; text-align: center; color: #666;">
+                <i class="fas fa-sitemap" style="font-size: 24px; margin-bottom: 10px;"></i>
+                <p>Category tree will appear here</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function testButtons() {
+            alert('Button clicked! This confirms the buttons are working.');
+        }
+        
+        // Add click handlers to test buttons
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', testButtons);
+        });
+    </script>
+</body>
+</html>

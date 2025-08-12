@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Settings</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <h2>Admin</h2>
+            <ul>
+                <li><a href="admin.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="admin-products.html"><i class="fas fa-box"></i> Products</a></li>
+                <li><a href="admin-categories.html"><i class="fas fa-sitemap"></i> Categories</a></li>
+                <li><a href="admin-collections.html"><i class="fas fa-layer-group"></i> Collections</a></li>
+                <li><a href="admin-orders.html"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li><a href="admin-customers.html"><i class="fas fa-users"></i> Customers</a></li>
+                <li><a href="admin-discount.html"><i class="fas fa-tags"></i> Discount</a></li>
+                <li><a href="admin-pages.html"><i class="fas fa-file-alt"></i> Pages</a></li>
+                <li><a href="admin-blog.html"><i class="fas fa-blog"></i> Blog</a></li>
+                <li><a href="admin-media.html"><i class="fas fa-photo-video"></i> Media</a></li>
+                <li><a href="admin-settings.html" class="active"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="admin-user.html"><i class="fas fa-user-cog"></i> Users</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="header">
+                <div class="header-top">
+                    <h1><i class="fas fa-cog"></i> Settings</h1>
+                    <a href="admin.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+                </div>
+                <p>Manage your store’s settings, including general, payment, and shipping options.</p>
+            </div>
+
+            <div class="settings-tabs">
+                <button class="tab-link active" onclick="openTab(event, 'general')"><i class="fas fa-store"></i> General</button>
+                <button class="tab-link" onclick="openTab(event, 'payment')"><i class="fas fa-credit-card"></i> Payment</button>
+                <button class="tab-link" onclick="openTab(event, 'shipping')"><i class="fas fa-shipping-fast"></i> Shipping</button>
+                <button class="tab-link" onclick="openTab(event, 'notifications')"><i class="fas fa-bell"></i> Notifications</button>
+                <button class="tab-link" onclick="openTab(event, 'seo')"><i class="fas fa-chart-line"></i> SEO</button>
+            </div>
+
+            <div id="general" class="tab-content active">
+                <div class="settings-card">
+                    <h3>Store Details</h3>
+                    <div class="form-group">
+                        <label for="store-name">Store Name</label>
+                        <input type="text" id="store-name" placeholder="Your Store Name" value="Gopingo" aria-label="Store Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="store-email">Support Email</label>
+                        <input type="email" id="store-email" placeholder="support@example.com" value="support@gopingo.com" aria-label="Support Email Address">
+                    </div>
+                     <div class="form-group">
+                        <label for="store-logo">Store Logo</label>
+                        <input type="file" id="store-logo" aria-label="Upload Store Logo">
+                    </div>
+                </div>
+                <div class="settings-card">
+                    <h3>Localization</h3>
+                    <div class="form-group">
+                        <label for="store-currency">Store Currency</label>
+                        <select id="store-currency">
+                            <option value="USD" selected>USD - US Dollar</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="GBP">GBP - British Pound</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="store-timezone">Timezone</label>
+                        <select id="store-timezone">
+                            <option value="UTC-8" selected> (UTC-08:00) Pacific Time</option>
+                            <option value="UTC-5">(UTC-05:00) Eastern Time</option>
+                        </select>
+                    </div>
+                </div>
+                 <button class="btn-primary">Save General Settings</button>
+            </div>
+
+            <div id="payment" class="tab-content">
+                <div class="settings-card">
+                    <h3>Payment Gateway</h3>
+                    <div class="form-group">
+                        <label for="payment-gateway">Provider</label>
+                        <select id="payment-gateway">
+                            <option value="stripe" selected>Stripe</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="klarna">Klarna</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="api-key">API Key</label>
+                        <input type="text" id="api-key" value="pk_test_1234567890" aria-label="Payment Gateway API Key">
+                    </div>
+                    <div class="form-group">
+                        <label for="secret-key">Secret Key</label>
+                        <input type="password" id="secret-key" value="sk_test_abcdefgh" aria-label="Payment Gateway Secret Key">
+                    </div>
+                    <div class="form-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked aria-label="Enable Test Mode for Payment Gateway">
+                            <span class="slider"></span>
+                            Enable Test Mode
+                        </label>
+                    </div>
+                </div>
+                 <button class="btn-primary">Save Payment Settings</button>
+            </div>
+
+            <div id="shipping" class="tab-content">
+                <div class="settings-card">
+                    <h3>Shipping Zones</h3>
+                    <div class="form-group">
+                        <label for="shipping-rate">Default Shipping Rate ($)</label>
+                        <input type="number" id="shipping-rate" value="5.00" aria-label="Default Shipping Rate in Dollars">
+                    </div>
+                    <div class="form-group">
+                        <label for="free-shipping-threshold">Free Shipping Threshold ($)</label>
+                        <input type="number" id="free-shipping-threshold" value="50.00" aria-label="Free Shipping Threshold in Dollars">
+                    </div>
+                </div>
+                 <button class="btn-primary">Save Shipping Settings</button>
+            </div>
+
+            <div id="notifications" class="tab-content">
+                <div class="settings-card">
+                    <h3>Customer Notifications</h3>
+                    <p>Emails sent to customers after certain events.</p>
+                    <ul class="notification-list">
+                        <li>Order Confirmation <button class="btn-secondary">Edit</button></li>
+                        <li>Shipping Confirmation <button class="btn-secondary">Edit</button></li>
+                        <li>Password Reset <button class="btn-secondary">Edit</button></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="seo" class="tab-content">
+                <div class="settings-card">
+                    <h3>Search Engine Optimization</h3>
+                     <div class="form-group">
+                        <label for="meta-title">Meta Title</label>
+                        <input type="text" id="meta-title" placeholder="Your Store | High-Quality Products" aria-label="SEO Meta Title">
+                    </div>
+                     <div class="form-group">
+                        <label for="meta-description">Meta Description</label>
+                        <textarea id="meta-description" rows="4" placeholder="Describe your store for search engines." aria-label="SEO Meta Description"></textarea>
+                    </div>
+                </div>
+                 <button class="btn-primary">Save SEO Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Activate the first tab by default
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector('.tab-link').click();
+        });
+    </script>
+    <script src="js/admin-auth.js"></script>
+    <script src="js/admin-settings.js"></script>
+</body>
+</html>

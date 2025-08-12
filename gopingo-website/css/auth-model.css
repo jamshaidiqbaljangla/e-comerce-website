@@ -1,0 +1,60 @@
+/* Auth Modal Specific Styles */
+#auth-modal .modal-content {
+    max-width: 450px;
+    padding: 0;
+}
+
+.auth-modal-content {
+    padding: 40px;
+}
+
+#auth-modal .auth-form-container {
+    box-shadow: none;
+    padding: 0;
+}
+
+/* Animation for form switching */
+.form-fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Loading button state */
+.btn-loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.btn-loading::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: calc(50% - 10px);
+    left: calc(50% - 10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+/* Critical modal fix - Add to your CSS file */
+#auth-modal.active, 
+#auth-modal.active .modal-content,
+#auth-modal.active .auth-modal-content,
+#auth-modal.active .auth-form-container {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+#auth-modal.active {
+    display: flex !important;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

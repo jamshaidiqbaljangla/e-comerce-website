@@ -1,0 +1,513 @@
+// Admin Discounts/Coupons Management JavaScript - Real Data Integration
+document.addEventListener('DOMContentLoaded', function() {
+    const discountsManager = new AdminDiscountsManager();
+    discountsManager.init();
+});
+
+class AdminDiscountsManager {
+    constructor() {
+        this.API_BASE = window.API_BASE || window.location.origin || 'https://ubiquitous-meringue-b2611a.netlify.app';
+        this.currentCoupons = [];
+        this.currentPage = 1;
+        this.totalPages = 1;
+    }
+
+    async init() {
+        await this.loadCoupons();
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        // Add coupon button
+        const addCouponBtn = document.getElementById('add-coupon-btn');
+        if (addCouponBtn) {
+            addCouponBtn.addEventListener('click', () => this.showAddCouponModal());
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+            searchInput.addEventListener('input', this.debounce((e) => this.handleSearch(e.target.value), 300));
+        }
+
+        // Refresh button
+        const refreshBtn = document.getElementById('refresh-btn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => this.loadCoupons());
+        }
+    }
+
+    async loadCoupons() {
+        try {
+            this.showLoading(true);
+            
+            const token = localStorage.getItem('adminToken');
+            const response = await fetch(`${this.API_BASE}/api/admin/coupons?page=${this.currentPage}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                this.currentCoupons = data.coupons;
+                this.totalPages = data.pagination.pages;
+                this.renderCouponsTable(data.coupons);
+                this.updateCouponsStats(data.coupons);
+            } else {
+                console.error('Failed to load coupons');
+                this.loadFallbackData();
+            }
+        } catch (error) {
+            console.error('Error loading coupons:', error);
+            this.loadFallbackData();
+        } finally {
+            this.showLoading(false);
+        }
+    }
+
+    loadFallbackData() {
+        // Fallback static data
+        this.currentCoupons = [
+            {
+                id: 1,
+                code: 'WELCOME10',
+                type: 'percentage',
+                value: 10,
+                description: '10% off for new customers',
+                min_order_amount: 50,
+                max_uses: 100,
+                used_count: 15,
+                active: 1,
+                expires_at: '2025-12-31',
+                created_at: '2025-01-01'
+            },
+            {
+                id: 2,
+                code: 'SAVE20',
+                type: 'fixed',
+                value: 20,
+                description: '$20 off orders over $100',
+                min_order_amount: 100,
+                max_uses: 50,
+                used_count: 8,
+                active: 1,
+                expires_at: '2025-06-30',
+                created_at: '2025-02-01'
+            }
+        ];
+        this.renderCouponsTable(this.currentCoupons);
+        this.updateCouponsStats(this.currentCoupons);
+    }
+
+function renderCouponsTable(coupons) {
+    const tableBody = document.querySelector('#coupons-table tbody');
+    if (!tableBody) return;
+
+    if (coupons.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="8" class="text-center">
+                    <div class="empty-state">
+                        <i class="fas fa-tags"></i>
+                        <p>No coupons found</p>
+                        <button class="btn btn-primary" onclick="showAddCouponModal()">Create First Coupon</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tableBody.innerHTML = coupons.map(coupon => `
+        <tr data-coupon-id="${coupon.id}" class="${!coupon.active ? 'inactive' : ''}">
+            <td>
+                <input type="checkbox" class="coupon-checkbox" value="${coupon.id}">
+            </td>
+            <td>
+                <div class="coupon-code">
+                    <strong>${coupon.code}</strong>
+                    <span class="badge badge-${coupon.type === 'percentage' ? 'info' : 'success'}">
+                        ${coupon.type === 'percentage' ? coupon.value + '%' : '$' + coupon.value}
+                    </span>
+                </div>
+            </td>
+            <td>${coupon.type.toUpperCase()}</td>
+            <td>
+                ${coupon.type === 'percentage' ? coupon.value + '%' : '$' + parseFloat(coupon.value).toFixed(2)}
+            </td>
+            <td>
+                ${coupon.minimum_amount ? '$' + parseFloat(coupon.minimum_amount).toFixed(2) : 'No minimum'}
+            </td>
+            <td>
+                ${coupon.usage_limit || 'Unlimited'} 
+                ${coupon.usage_limit ? `(${coupon.used_count || 0} used)` : ''}
+            </td>
+            <td>
+                ${coupon.expires_at ? formatDate(coupon.expires_at) : 'Never'}
+            </td>
+            <td>
+                <span class="badge badge-${coupon.active ? 'success' : 'danger'}">
+                    ${coupon.active ? 'Active' : 'Inactive'}
+                </span>
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn view-btn" onclick="viewCoupon(${coupon.id})" title="View Coupon">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="action-btn edit-btn" onclick="editCoupon(${coupon.id})" title="Edit Coupon">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn ${coupon.active ? 'disable-btn' : 'enable-btn'}" 
+                            onclick="toggleCoupon(${coupon.id}, ${coupon.active})" 
+                            title="${coupon.active ? 'Disable' : 'Enable'} Coupon">
+                        <i class="fas fa-${coupon.active ? 'ban' : 'check'}"></i>
+                    </button>
+                    <button class="action-btn delete-btn" onclick="deleteCoupon(${coupon.id})" title="Delete Coupon">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+
+    // Setup select all checkbox
+    const selectAllCheckbox = document.getElementById('select-all');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.coupon-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+    }
+}
+
+function updateCouponsStats(coupons) {
+    const totalCoupons = coupons.length;
+    const activeCoupons = coupons.filter(coupon => coupon.active).length;
+    const expiredCoupons = coupons.filter(coupon => 
+        coupon.expires_at && new Date(coupon.expires_at) < new Date()
+    ).length;
+    const totalUsage = coupons.reduce((sum, coupon) => sum + (coupon.used_count || 0), 0);
+    
+    // Update stats cards if they exist
+    document.getElementById('total-coupons').textContent = totalCoupons;
+    document.getElementById('active-coupons').textContent = activeCoupons;
+    document.getElementById('expired-coupons').textContent = expiredCoupons;
+    document.getElementById('total-usage').textContent = totalUsage;
+}
+
+function showAddCouponModal() {
+    showCouponModal({}, 'add');
+}
+
+function editCoupon(couponId) {
+    const coupon = currentCoupons.find(c => c.id === couponId);
+    if (coupon) {
+        showCouponModal(coupon, 'edit');
+    }
+}
+
+function showCouponModal(coupon, mode) {
+    const isEdit = mode === 'edit';
+    
+    Swal.fire({
+        title: isEdit ? 'Edit Coupon' : 'Create New Coupon',
+        html: `
+            <div class="coupon-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Coupon Code</label>
+                        <input type="text" id="coupon-code" class="swal2-input" 
+                               placeholder="SUMMER2025" value="${coupon.code || ''}" 
+                               style="text-transform: uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="coupon-type" class="swal2-select">
+                            <option value="percentage" ${coupon.type === 'percentage' ? 'selected' : ''}>Percentage</option>
+                            <option value="fixed" ${coupon.type === 'fixed' ? 'selected' : ''}>Fixed Amount</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Value</label>
+                        <input type="number" id="coupon-value" class="swal2-input" 
+                               placeholder="10" value="${coupon.value || ''}" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Minimum Order Amount</label>
+                        <input type="number" id="minimum-amount" class="swal2-input" 
+                               placeholder="50.00" value="${coupon.minimum_amount || ''}" min="0" step="0.01">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Maximum Discount (for percentage)</label>
+                        <input type="number" id="maximum-discount" class="swal2-input" 
+                               placeholder="100.00" value="${coupon.maximum_discount || ''}" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Usage Limit</label>
+                        <input type="number" id="usage-limit" class="swal2-input" 
+                               placeholder="Leave empty for unlimited" value="${coupon.usage_limit || ''}" min="1">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Expiry Date</label>
+                        <input type="datetime-local" id="expires-at" class="swal2-input" 
+                               value="${coupon.expires_at ? new Date(coupon.expires_at).toISOString().slice(0, 16) : ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="coupon-active" ${coupon.active !== false ? 'checked' : ''}>
+                            Active
+                        </label>
+                    </div>
+                </div>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: isEdit ? 'Update Coupon' : 'Create Coupon',
+        width: '600px',
+        preConfirm: () => {
+            const code = document.getElementById('coupon-code').value.trim().toUpperCase();
+            const type = document.getElementById('coupon-type').value;
+            const value = parseFloat(document.getElementById('coupon-value').value);
+            const minimumAmount = document.getElementById('minimum-amount').value;
+            const maximumDiscount = document.getElementById('maximum-discount').value;
+            const usageLimit = document.getElementById('usage-limit').value;
+            const expiresAt = document.getElementById('expires-at').value;
+            const active = document.getElementById('coupon-active').checked;
+            
+            if (!code) {
+                Swal.showValidationMessage('Coupon code is required');
+                return false;
+            }
+            
+            if (!value || value <= 0) {
+                Swal.showValidationMessage('Valid value is required');
+                return false;
+            }
+            
+            if (type === 'percentage' && value > 100) {
+                Swal.showValidationMessage('Percentage cannot exceed 100%');
+                return false;
+            }
+            
+            return {
+                code,
+                type,
+                value,
+                minimumAmount: minimumAmount ? parseFloat(minimumAmount) : null,
+                maximumDiscount: maximumDiscount ? parseFloat(maximumDiscount) : null,
+                usageLimit: usageLimit ? parseInt(usageLimit) : null,
+                expiresAt: expiresAt || null,
+                active
+            };
+        }
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                const url = isEdit ? `/api/admin/coupons/${coupon.id}` : '/api/admin/coupons';
+                const method = isEdit ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(result.value)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showSuccess(`Coupon ${isEdit ? 'updated' : 'created'} successfully`);
+                    loadCoupons();
+                } else {
+                    showError(data.message || `Failed to ${isEdit ? 'update' : 'create'} coupon`);
+                }
+            } catch (error) {
+                console.error('Error saving coupon:', error);
+                showError(`Failed to ${isEdit ? 'update' : 'create'} coupon`);
+            }
+        }
+    });
+}
+
+async function toggleCoupon(couponId, currentStatus) {
+    const newStatus = !currentStatus;
+    const action = newStatus ? 'enable' : 'disable';
+    
+    const result = await Swal.fire({
+        title: `${action.charAt(0).toUpperCase() + action.slice(1)} Coupon`,
+        text: `Are you sure you want to ${action} this coupon?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: `Yes, ${action} it`
+    });
+    
+    if (result.isConfirmed) {
+        try {
+            const coupon = currentCoupons.find(c => c.id === couponId);
+            const response = await fetch(`/api/admin/coupons/${couponId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ...coupon,
+                    active: newStatus
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showSuccess(`Coupon ${action}d successfully`);
+                loadCoupons();
+            } else {
+                showError(`Failed to ${action} coupon`);
+            }
+        } catch (error) {
+            console.error('Error toggling coupon:', error);
+            showError(`Failed to ${action} coupon`);
+        }
+    }
+}
+
+async function deleteCoupon(couponId) {
+    const result = await Swal.fire({
+        title: 'Delete Coupon',
+        text: 'Are you sure you want to delete this coupon? This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it',
+        confirmButtonColor: '#dc3545'
+    });
+    
+    if (result.isConfirmed) {
+        try {
+            const response = await fetch(`/api/admin/coupons/${couponId}`, {
+                method: 'DELETE'
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showSuccess('Coupon deleted successfully');
+                loadCoupons();
+            } else {
+                showError('Failed to delete coupon');
+            }
+        } catch (error) {
+            console.error('Error deleting coupon:', error);
+            showError('Failed to delete coupon');
+        }
+    }
+}
+
+function viewCoupon(couponId) {
+    const coupon = currentCoupons.find(c => c.id === couponId);
+    if (!coupon) return;
+    
+    Swal.fire({
+        title: 'Coupon Details',
+        html: `
+            <div class="coupon-details">
+                <div class="detail-row">
+                    <strong>Code:</strong> ${coupon.code}
+                </div>
+                <div class="detail-row">
+                    <strong>Type:</strong> ${coupon.type.toUpperCase()}
+                </div>
+                <div class="detail-row">
+                    <strong>Value:</strong> ${coupon.type === 'percentage' ? coupon.value + '%' : '$' + coupon.value}
+                </div>
+                <div class="detail-row">
+                    <strong>Minimum Amount:</strong> ${coupon.minimum_amount ? '$' + coupon.minimum_amount : 'No minimum'}
+                </div>
+                <div class="detail-row">
+                    <strong>Maximum Discount:</strong> ${coupon.maximum_discount ? '$' + coupon.maximum_discount : 'No limit'}
+                </div>
+                <div class="detail-row">
+                    <strong>Usage:</strong> ${coupon.used_count || 0} / ${coupon.usage_limit || 'Unlimited'}
+                </div>
+                <div class="detail-row">
+                    <strong>Expires:</strong> ${coupon.expires_at ? formatDate(coupon.expires_at) : 'Never'}
+                </div>
+                <div class="detail-row">
+                    <strong>Status:</strong> 
+                    <span class="badge badge-${coupon.active ? 'success' : 'danger'}">
+                        ${coupon.active ? 'Active' : 'Inactive'}
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <strong>Created:</strong> ${formatDate(coupon.created_at)}
+                </div>
+            </div>
+        `,
+        confirmButtonText: 'Close'
+    });
+}
+
+function handleSearch() {
+    const searchTerm = document.getElementById('search-input').value.toLowerCase();
+    const filtered = currentCoupons.filter(coupon => 
+        coupon.code.toLowerCase().includes(searchTerm) ||
+        coupon.type.toLowerCase().includes(searchTerm)
+    );
+    renderCouponsTable(filtered);
+}
+
+function showLoading(show) {
+    const loadingElement = document.getElementById('loading-spinner');
+    if (loadingElement) {
+        loadingElement.style.display = show ? 'block' : 'none';
+    }
+}
+
+function showError(message) {
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: message
+    });
+}
+
+function showSuccess(message) {
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: message,
+        timer: 2000,
+        showConfirmButton: false
+    });
+}
+
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}

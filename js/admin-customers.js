@@ -1,0 +1,339 @@
+// Admin Customers Management JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    loadCustomers();
+    setupEventListeners();
+});
+
+let currentCustomers = [];
+
+function setupEventListeners() {
+    // Search functionality
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(handleSearch, 300));
+    }
+
+    // Refresh button
+    const refreshBtn = document.getElementById('refresh-btn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', loadCustomers);
+    }
+}
+
+async function loadCustomers() {
+    const searchTerm = document.getElementById('search-input')?.value || '';
+    
+    try {
+        showLoading(true);
+        
+        const params = new URLSearchParams();
+        if (searchTerm) params.append('search', searchTerm);
+        
+        const response = await fetch(`/api/admin/customers?${params}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            currentCustomers = data.customers;
+            renderCustomersTable(data.customers);
+            updateCustomersStats(data.customers);
+        } else {
+            showError('Failed to load customers: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error loading customers:', error);
+        showError('Failed to load customers');
+    } finally {
+        showLoading(false);
+    }
+}
+
+function renderCustomersTable(customers) {
+    const tableBody = document.querySelector('#customers-table tbody');
+    if (!tableBody) return;
+
+    if (customers.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center">
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <p>No customers found</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tableBody.innerHTML = customers.map(customer => `
+        <tr data-customer-id="${customer.id}">
+            <td>
+                <input type="checkbox" class="customer-checkbox" value="${customer.id}">
+            </td>
+            <td>
+                <div class="customer-info">
+                    <strong>${customer.first_name || ''} ${customer.last_name || ''}</strong>
+                    <small>${customer.email}</small>
+                </div>
+            </td>
+            <td>${customer.phone || 'N/A'}</td>
+            <td>
+                <span class="badge badge-${customer.email_verified ? 'success' : 'warning'}">
+                    ${customer.email_verified ? 'Verified' : 'Unverified'}
+                </span>
+            </td>
+            <td>${customer.order_count || 0}</td>
+            <td>$${parseFloat(customer.total_spent || 0).toFixed(2)}</td>
+            <td>${formatDate(customer.created_at)}</td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn view-btn" onclick="viewCustomer(${customer.id})" title="View Customer">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="action-btn edit-btn" onclick="editCustomer(${customer.id})" title="Edit Customer">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn email-btn" onclick="emailCustomer('${customer.email}')" title="Send Email">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+
+    // Setup select all checkbox
+    const selectAllCheckbox = document.getElementById('select-all');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.customer-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+    }
+}
+
+function updateCustomersStats(customers) {
+    const totalCustomers = customers.length;
+    const verifiedCustomers = customers.filter(customer => customer.email_verified).length;
+    const totalRevenue = customers.reduce((sum, customer) => sum + parseFloat(customer.total_spent || 0), 0);
+    const totalOrders = customers.reduce((sum, customer) => sum + parseInt(customer.order_count || 0), 0);
+    
+    // Update stats cards if they exist
+    const totalCustomersElement = document.getElementById('total-customers');
+    const verifiedCustomersElement = document.getElementById('verified-customers');
+    const totalRevenueElement = document.getElementById('total-revenue');
+    const totalOrdersElement = document.getElementById('total-orders');
+    
+    if (totalCustomersElement) totalCustomersElement.textContent = totalCustomers;
+    if (verifiedCustomersElement) verifiedCustomersElement.textContent = verifiedCustomers;
+    if (totalRevenueElement) totalRevenueElement.textContent = `$${totalRevenue.toFixed(2)}`;
+    if (totalOrdersElement) totalOrdersElement.textContent = totalOrders;
+}
+
+async function viewCustomer(customerId) {
+    try {
+        const response = await fetch(`/api/admin/customers/${customerId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            showCustomerModal(data.customer);
+        } else {
+            showError('Failed to load customer details');
+        }
+    } catch (error) {
+        console.error('Error loading customer:', error);
+        showError('Failed to load customer details');
+    }
+}
+
+function showCustomerModal(customer) {
+    const modal = document.getElementById('customer-modal') || createCustomerModal();
+    
+    // Populate modal with customer data
+    modal.querySelector('#modal-customer-name').textContent = `${customer.first_name || ''} ${customer.last_name || ''}`;
+    modal.querySelector('#modal-customer-email').textContent = customer.email;
+    modal.querySelector('#modal-customer-phone').textContent = customer.phone || 'N/A';
+    modal.querySelector('#modal-customer-joined').textContent = formatDate(customer.created_at);
+    modal.querySelector('#modal-customer-verified').textContent = customer.email_verified ? 'Yes' : 'No';
+    modal.querySelector('#modal-customer-orders').textContent = customer.order_count || 0;
+    modal.querySelector('#modal-customer-spent').textContent = `$${parseFloat(customer.total_spent || 0).toFixed(2)}`;
+    
+    // Populate recent orders
+    const ordersContainer = modal.querySelector('#modal-customer-order-history');
+    if (customer.recent_orders && customer.recent_orders.length > 0) {
+        ordersContainer.innerHTML = customer.recent_orders.map(order => `
+            <div class="order-item">
+                <div class="order-details">
+                    <strong>#${order.order_number}</strong>
+                    <span class="badge badge-${getStatusClass(order.status)}">${order.status.toUpperCase()}</span>
+                </div>
+                <div class="order-info">
+                    <span>$${parseFloat(order.total_amount).toFixed(2)}</span>
+                    <small>${formatDate(order.created_at)}</small>
+                </div>
+            </div>
+        `).join('');
+    } else {
+        ordersContainer.innerHTML = '<p class="text-muted">No recent orders</p>';
+    }
+    
+    modal.style.display = 'block';
+}
+
+function createCustomerModal() {
+    const modalHTML = `
+        <div id="customer-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Customer Details</h2>
+                    <span class="close-btn">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="customer-details-grid">
+                        <div class="customer-info">
+                            <h3>Customer Information</h3>
+                            <p><strong>Name:</strong> <span id="modal-customer-name"></span></p>
+                            <p><strong>Email:</strong> <span id="modal-customer-email"></span></p>
+                            <p><strong>Phone:</strong> <span id="modal-customer-phone"></span></p>
+                            <p><strong>Joined:</strong> <span id="modal-customer-joined"></span></p>
+                            <p><strong>Email Verified:</strong> <span id="modal-customer-verified"></span></p>
+                        </div>
+                        <div class="customer-stats">
+                            <h3>Customer Statistics</h3>
+                            <p><strong>Total Orders:</strong> <span id="modal-customer-orders"></span></p>
+                            <p><strong>Total Spent:</strong> <span id="modal-customer-spent"></span></p>
+                        </div>
+                    </div>
+                    <div class="customer-orders">
+                        <h3>Recent Orders</h3>
+                        <div id="modal-customer-order-history"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    const modal = document.getElementById('customer-modal');
+    
+    // Close modal functionality
+    modal.querySelector('.close-btn').addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+    
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+    
+    return modal;
+}
+
+function editCustomer(customerId) {
+    // For now, just show an alert. In a real implementation, this would open an edit form
+    Swal.fire({
+        title: 'Edit Customer',
+        text: 'Customer editing functionality would be implemented here.',
+        icon: 'info'
+    });
+}
+
+function emailCustomer(email) {
+    Swal.fire({
+        title: 'Send Email',
+        html: `
+            <div class="email-form">
+                <input type="text" id="email-subject" class="swal2-input" placeholder="Subject">
+                <textarea id="email-message" class="swal2-textarea" placeholder="Message"></textarea>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Send Email',
+        preConfirm: () => {
+            const subject = document.getElementById('email-subject').value;
+            const message = document.getElementById('email-message').value;
+            
+            if (!subject || !message) {
+                Swal.showValidationMessage('Please fill in both subject and message');
+                return false;
+            }
+            
+            return { subject, message };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // In a real implementation, this would send the email via API
+            showSuccess(`Email would be sent to ${email}`);
+        }
+    });
+}
+
+function getStatusClass(status) {
+    const statusClasses = {
+        pending: 'warning',
+        processing: 'info',
+        shipped: 'primary',
+        delivered: 'success',
+        cancelled: 'danger'
+    };
+    return statusClasses[status] || 'secondary';
+}
+
+function handleSearch() {
+    loadCustomers();
+}
+
+function showLoading(show) {
+    const loadingElement = document.getElementById('loading-spinner');
+    if (loadingElement) {
+        loadingElement.style.display = show ? 'block' : 'none';
+    }
+}
+
+function showError(message) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: message
+        });
+    } else {
+        alert('Error: ' + message);
+    }
+}
+
+function showSuccess(message) {
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: message,
+            timer: 2000,
+            showConfirmButton: false
+        });
+    } else {
+        alert(message);
+    }
+}
+
+function formatDate(dateString) {
+    return new Date(dateString).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
